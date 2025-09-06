@@ -2,95 +2,104 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Git Learning Platform Design System - Modern Dark Theme with Electric Blue Accents
+All colors MUST be HSL for consistency and theme support.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark Theme Foundation */
+    --background: 222 47% 4%;
+    --surface: 222 47% 6%;
+    --surface-elevated: 222 47% 8%;
+    --foreground: 210 40% 98%;
+    --muted-foreground: 215 20% 65%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Electric Blue Accent System */
+    --electric-blue: 195 100% 50%;
+    --electric-blue-hover: 195 100% 45%;
+    --electric-blue-glow: 195 100% 60%;
+    --blue-gradient: linear-gradient(135deg, hsl(195 100% 50%), hsl(220 100% 55%));
+    
+    /* Neon Green Accent */
+    --neon-green: 127 100% 50%;
+    --green-glow: 127 100% 60%;
+    
+    /* Warm Orange Accent */
+    --warm-orange: 28 100% 60%;
+    --orange-glow: 28 100% 70%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Component Colors */
+    --card: 222 47% 6%;
+    --card-foreground: 210 40% 98%;
+    --card-border: 222 47% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 195 100% 50%;
+    --primary-foreground: 222 47% 4%;
+    --primary-glow: 195 100% 60%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 222 47% 12%;
+    --secondary-foreground: 210 40% 98%;
+    --secondary-hover: 222 47% 16%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 127 100% 50%;
+    --accent-foreground: 222 47% 4%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 222 47% 10%;
+    --border: 222 47% 12%;
+    --input: 222 47% 8%;
+    --ring: 195 100% 50%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Interactive States */
+    --hover-bg: 222 47% 8%;
+    --active-bg: 222 47% 12%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(195 100% 50%), hsl(220 100% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 12%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 4%), hsl(222 47% 8%));
+    --gradient-glow: radial-gradient(circle at center, hsl(195 100% 50% / 0.2), transparent 70%);
 
-    --radius: 0.5rem;
+    /* Shadows & Effects */
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+    --shadow-card: 0 8px 32px hsl(222 47% 2% / 0.4);
+    --shadow-elevated: 0 16px 64px hsl(222 47% 2% / 0.6);
 
-    --sidebar-background: 0 0% 98%;
+    /* Animation Timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Light mode - keeping for potential future use */
+  .light {
+    --background: 210 40% 98%;
+    --surface: 0 0% 100%;
+    --surface-elevated: 210 40% 96%;
+    --foreground: 222 47% 11%;
+    --muted-foreground: 215 16% 47%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --card-border: 214 32% 91%;
+    
+    --primary: 195 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --secondary-hover: 210 40% 92%;
+    
+    --muted: 210 40% 96%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 195 100% 50%;
+    
+    --shadow-card: 0 8px 32px hsl(222 47% 11% / 0.1);
+    --shadow-elevated: 0 16px 64px hsl(222 47% 11% / 0.15);
   }
 }
 
@@ -101,5 +110,84 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Hero Button Variants */
+  .btn-hero {
+    @apply relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .btn-hero:hover {
+    box-shadow: 0 0 60px hsl(var(--primary-glow) / 0.4);
+  }
+
+  .btn-secondary-hero {
+    @apply relative bg-secondary hover:bg-secondary-hover text-secondary-foreground font-semibold px-8 py-4 rounded-lg border border-border transition-all duration-300 transform hover:scale-105;
+  }
+
+  /* Glow Effects */
+  .glow-blue {
+    box-shadow: 0 0 20px hsl(var(--electric-blue) / 0.3);
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 20px hsl(var(--neon-green) / 0.3);
+  }
+  
+  .glow-orange {
+    box-shadow: 0 0 20px hsl(var(--warm-orange) / 0.3);
+  }
+
+  /* Card Variants */
+  .card-elevated {
+    @apply bg-surface-elevated border border-card-border rounded-lg p-6 transition-all duration-300 hover:shadow-elevated;
+  }
+  
+  .card-glow {
+    @apply bg-surface border border-card-border rounded-lg p-6 relative overflow-hidden;
+    box-shadow: var(--shadow-card);
+  }
+  
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-glow);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+
+  /* Interactive Elements */
+  .interactive-element {
+    @apply transition-all duration-300 cursor-pointer;
+  }
+  
+  .interactive-element:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Text Gradients */
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
   }
 }
