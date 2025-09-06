@@ -7,10 +7,10 @@ export const Navigation: React.FC = () => {
 
   const navItems = [
     { name: 'Home', href: '#', icon: Home },
-    { name: 'Learn', href: '#learn', icon: BookOpen },
-    { name: 'Practice', href: '#practice', icon: Code },
-    { name: 'Community', href: '#community', icon: Users },
-    { name: 'Achievements', href: '#achievements', icon: Award },
+    { name: 'Basics', href: '#git-basics', icon: BookOpen },
+    { name: 'Branching', href: '#git-branching', icon: Code },
+    { name: 'Advanced', href: '#git-advanced', icon: Users },
+    { name: 'Features', href: '#features', icon: Award },
   ];
 
   return (

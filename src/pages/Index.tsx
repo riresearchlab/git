@@ -1,7 +1,9 @@
 import React from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/Hero';
-import { LearningModules } from '@/components/LearningModules';
+import { GitBasics } from '@/components/GitBasics';
+import { GitBranching } from '@/components/GitBranching';
+import { GitAdvanced } from '@/components/GitAdvanced';
 import { Features } from '@/components/Features';
 import { Footer } from '@/components/Footer';
 
@@ -11,7 +13,9 @@ const Index = () => {
       <Navigation />
       <main>
         <Hero />
-        <LearningModules />
+        <GitBasics />
+        <GitBranching />
+        <GitAdvanced />
         <Features />
       </main>
       <Footer />

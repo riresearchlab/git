@@ -1,0 +1,252 @@
+import React, { useState } from 'react';
+import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+
+export const GitBasics: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [gitState, setGitState] = useState({
+    initialized: false,
+    staged: [] as string[],
+    committed: [] as { message: string; files: string[] }[]
+  });
+
+  const commands = [
+    { cmd: 'git init', desc: 'Initialize a new Git repository' },
+    { cmd: 'git add README.md', desc: 'Stage a file for commit' },
+    { cmd: 'git commit -m "Initial commit"', desc: 'Create your first commit' },
+    { cmd: 'git status', desc: 'Check repository status' },
+    { cmd: 'git log', desc: 'View commit history' }
+  ];
+
+  const executeCommand = (command: string) => {
+    setTerminalHistory(prev => [...prev, `$ ${command}`]);
+    
+    switch (command) {
+      case 'git init':
+        setGitState(prev => ({ ...prev, initialized: true }));
+        setTerminalHistory(prev => [...prev, 'Initialized empty Git repository in .git/']);
+        break;
+      case 'git add README.md':
+        if (gitState.initialized) {
+          setGitState(prev => ({ ...prev, staged: ['README.md'] }));
+          setTerminalHistory(prev => [...prev, 'File staged successfully']);
+        } else {
+          setTerminalHistory(prev => [...prev, 'fatal: not a git repository']);
+        }
+        break;
+      case 'git commit -m "Initial commit"':
+        if (gitState.staged.length > 0) {
+          setGitState(prev => ({
+            ...prev,
+            committed: [...prev.committed, { message: 'Initial commit', files: [...prev.staged] }],
+            staged: []
+          }));
+          setTerminalHistory(prev => [...prev, '[main (root-commit) abc1234] Initial commit', ' 1 file changed, 0 insertions(+), 0 deletions(-)']);
+        } else {
+          setTerminalHistory(prev => [...prev, 'nothing to commit, working tree clean']);
+        }
+        break;
+      case 'git status':
+        if (!gitState.initialized) {
+          setTerminalHistory(prev => [...prev, 'fatal: not a git repository']);
+        } else if (gitState.staged.length > 0) {
+          setTerminalHistory(prev => [...prev, 'On branch main', 'Changes to be committed:', '  (use "git reset HEAD <file>..." to unstage)', '', '	modified:   README.md']);
+        } else {
+          setTerminalHistory(prev => [...prev, 'On branch main', 'nothing to commit, working tree clean']);
+        }
+        break;
+      case 'git log':
+        if (gitState.committed.length > 0) {
+          gitState.committed.forEach(commit => {
+            setTerminalHistory(prev => [...prev, `commit abc${Math.random().toString().slice(2, 8)}`, `Author: You <you@example.com>`, `Date: ${new Date().toDateString()}`, '', `    ${commit.message}`, '']);
+          });
+        } else {
+          setTerminalHistory(prev => [...prev, 'fatal: your current branch \'main\' does not have any commits yet']);
+        }
+        break;
+    }
+  };
+
+  const resetDemo = () => {
+    setTerminalHistory([]);
+    setGitState({ initialized: false, staged: [], committed: [] });
+    setCurrentStep(0);
+  };
+
+  return (
+    <section id="git-basics" className="py-20 bg-surface">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 animate-fade-in">
+          <Badge variant="outline" className="mb-4 px-4 py-2">
+            <Terminal className="w-4 h-4 mr-2" />
+            Interactive Git Basics
+          </Badge>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+            Master the <span className="text-gradient-primary">Fundamentals</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Learn Git basics with live command execution and visual feedback
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Interactive Terminal */}
+          <Card className="card-glow glow-blue h-fit">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Terminal className="w-5 h-5" />
+                <span>Interactive Terminal</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Terminal Window */}
+              <div className="bg-black rounded-lg p-4 font-mono text-sm">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-gray-400 ml-2">Terminal</span>
+                </div>
+                
+                <div className="text-green-400 space-y-1 max-h-64 overflow-y-auto">
+                  {terminalHistory.map((line, idx) => (
+                    <div key={idx} className={line.startsWith('$') ? 'text-white' : 'text-gray-300'}>
+                      {line}
+                    </div>
+                  ))}
+                  <div className="text-white">
+                    $ <span className="animate-pulse">_</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Command Buttons */}
+              <div className="space-y-2">
+                {commands.map((command, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
+                    <Button
+                      onClick={() => executeCommand(command.cmd)}
+                      className="text-sm font-mono flex-1 justify-start"
+                      variant={idx <= currentStep ? "default" : "outline"}
+                    >
+                      {command.cmd}
+                    </Button>
+                  </div>
+                ))}
+                <Button onClick={resetDemo} variant="outline" className="w-full">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Reset Demo
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Git State Visualization */}
+          <Card className="card-glow glow-green">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <GitBranch className="w-5 h-5" />
+                <span>Git Repository State</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* Repository Status */}
+                <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                  <div className={`w-4 h-4 rounded-full ${gitState.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                  <span className={gitState.initialized ? 'text-green-400' : 'text-gray-400'}>
+                    Repository {gitState.initialized ? 'Initialized' : 'Not Initialized'}
+                  </span>
+                </div>
+
+                {/* Staging Area */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold flex items-center space-x-2">
+                    <Plus className="w-4 h-4" />
+                    <span>Staging Area</span>
+                  </h4>
+                  <div className="min-h-[60px] p-4 border-2 border-dashed border-accent rounded-lg">
+                    {gitState.staged.length > 0 ? (
+                      gitState.staged.map((file, idx) => (
+                        <Badge key={idx} variant="secondary" className="mr-2 mb-2">
+                          {file}
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground text-center">No staged files</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Commit History */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold flex items-center space-x-2">
+                    <Save className="w-4 h-4" />
+                    <span>Commit History</span>
+                  </h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {gitState.committed.length > 0 ? (
+                      gitState.committed.map((commit, idx) => (
+                        <div key={idx} className="p-3 bg-primary/10 rounded-lg border-l-4 border-primary">
+                          <div className="font-mono text-sm text-primary">
+                            commit abc{Math.random().toString().slice(2, 8)}
+                          </div>
+                          <div className="text-sm">{commit.message}</div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Files: {commit.files.join(', ')}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground text-center p-4">No commits yet</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Concept Cards */}
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
+          {[
+            {
+              icon: Terminal,
+              title: "Working Directory",
+              description: "Your project files where you make changes",
+              color: "electric-blue"
+            },
+            {
+              icon: Plus,
+              title: "Staging Area",
+              description: "Prepared changes ready for commit",
+              color: "neon-green"
+            },
+            {
+              icon: Save,
+              title: "Repository",
+              description: "Permanent storage of your project history",
+              color: "warm-orange"
+            }
+          ].map((concept, idx) => {
+            const Icon = concept.icon;
+            return (
+              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                    <Icon className={`w-8 h-8 text-${concept.color}`} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                  <p className="text-muted-foreground">{concept.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
