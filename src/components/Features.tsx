@@ -132,45 +132,6 @@ export const Features: React.FC = () => {
           })}
         </div>
 
-        {/* Bottom CTA Section */}
-        <div className="text-center bg-surface-elevated rounded-2xl p-8 lg:p-12 border border-border animate-scale-in">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h3 className="text-2xl lg:text-3xl font-bold">
-              Ready to Transform Your <span className="text-gradient-primary">Git Skills</span>?
-            </h3>
-            <p className="text-muted-foreground text-lg">
-              Join thousands of developers who have mastered Git through our interactive learning platform. 
-              Start your journey today and see the difference visual learning makes.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button className="btn-hero text-lg px-8 py-6">
-                Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              
-              <Button variant="outline" className="btn-secondary-hero text-lg px-8 py-6">
-                Schedule Demo
-              </Button>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex justify-center items-center space-x-6 pt-6 text-sm text-muted-foreground">
-              <div className="flex items-center space-x-2">
-                <Zap className="w-4 h-4 text-primary" />
-                <span>Instant Access</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Users className="w-4 h-4 text-accent" />
-                <span>10K+ Happy Learners</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Box className="w-4 h-4 text-warm-orange" />
-                <span>No Credit Card Required</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
