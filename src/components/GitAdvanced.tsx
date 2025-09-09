@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Zap, RotateCcw, Cherry, Archive, Settings } from 'lucide-react';
+import { Zap, RotateCcw, Cherry, Archive, Settings, Upload, Download, RefreshCw, Globe, Terminal } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +33,10 @@ export const GitAdvanced: React.FC = () => {
   const [rebaseResult, setRebaseResult] = useState<Commit[]>([]);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
   const [workingChanges, setWorkingChanges] = useState(['index.html', 'style.css']);
+  const [localCommits, setLocalCommits] = useState(2);
+  const [remoteCommits, setRemoteCommits] = useState(3);
+  const [hasUnpushedChanges, setHasUnpushedChanges] = useState(true);
+  const [hasUnpulledChanges, setHasUnpulledChanges] = useState(true);
 
   const addOutput = (command: string, output: string) => {
     setTerminalOutput(prev => [...prev, `$ ${command}`, output]);
@@ -103,6 +107,37 @@ export const GitAdvanced: React.FC = () => {
     );
   };
 
+  const performPush = () => {
+    if (localCommits > 0) {
+      setLocalCommits(0);
+      setHasUnpushedChanges(false);
+      addOutput(
+        'git push origin main',
+        `Enumerating objects: ${localCommits * 3}, done.\nCounting objects: 100% (${localCommits * 3}/${localCommits * 3}), done.\nWriting objects: 100% (${localCommits}/${localCommits}), done.\nTotal ${localCommits} (delta 0), reused 0 (delta 0)\nTo https://github.com/riresearchlab/git\n   abc1234..def5678  main -> main`
+      );
+    } else {
+      addOutput('git push origin main', 'Everything up-to-date');
+    }
+  };
+
+  const performPull = () => {
+    if (remoteCommits > 0) {
+      setRemoteCommits(0);
+      setHasUnpulledChanges(false);
+      setCommits(prev => [
+        ...prev,
+        { id: 'remote-1', message: 'Update documentation', author: 'Collaborator', date: '2024-01-06', hash: 'xyz1234' },
+        { id: 'remote-2', message: 'Fix merge conflict', author: 'Collaborator', date: '2024-01-07', hash: 'xyz5678' }
+      ]);
+      addOutput(
+        'git pull origin main',
+        `remote: Enumerating objects: ${remoteCommits * 2}, done.\nremote: Counting objects: 100% (${remoteCommits * 2}/${remoteCommits * 2}), done.\nremote: Compressing objects: 100% (${remoteCommits}/${remoteCommits}), done.\nremote: Total ${remoteCommits} (delta 1), reused ${remoteCommits} (delta 1)\nUnpacking objects: 100% (${remoteCommits}/${remoteCommits}), done.\nFrom https://github.com/riresearchlab/git\n * branch            main       -> FETCH_HEAD\n   def5678..xyz5678  main       -> origin/main\nUpdating def5678..xyz5678\nFast-forward\n README.md | 2 ++\n 1 file changed, 2 insertions(+)`
+      );
+    } else {
+      addOutput('git pull origin main', 'Already up to date.');
+    }
+  };
+
   const resetDemo = () => {
     setCommits([
       { id: '1', message: 'Initial commit', author: 'You', date: '2024-01-01', hash: 'abc1234' },
@@ -115,6 +150,10 @@ export const GitAdvanced: React.FC = () => {
     setRebaseResult([]);
     setTerminalOutput([]);
     setWorkingChanges(['index.html', 'style.css']);
+    setLocalCommits(2);
+    setRemoteCommits(3);
+    setHasUnpushedChanges(true);
+    setHasUnpulledChanges(true);
   };
 
   return (
@@ -170,13 +209,102 @@ export const GitAdvanced: React.FC = () => {
               <CardTitle>Advanced Operations</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="rebase" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+              <Tabs defaultValue="remote" className="w-full">
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="remote">Push/Pull</TabsTrigger>
                   <TabsTrigger value="rebase">Rebase</TabsTrigger>
                   <TabsTrigger value="cherry-pick">Cherry Pick</TabsTrigger>
                   <TabsTrigger value="stash">Stash</TabsTrigger>
                   <TabsTrigger value="reset">Reset</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="remote" className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold mb-2">Remote Operations</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Synchronize your local repository with remote GitHub repository
+                    </p>
+                    
+                    {/* Remote Status Visualization */}
+                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                      <Card className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h5 className="font-medium flex items-center space-x-2">
+                            <Terminal className="w-4 h-4" />
+                            <span>Local Repository</span>
+                          </h5>
+                          <Badge variant={hasUnpushedChanges ? "destructive" : "secondary"}>
+                            {localCommits} unpushed commits
+                          </Badge>
+                        </div>
+                        <div className="space-y-2">
+                          {hasUnpushedChanges && (
+                            <div className="flex items-center space-x-2 text-sm text-yellow-600">
+                              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                              <span>Local changes ready to push</span>
+                            </div>
+                          )}
+                          <Button 
+                            onClick={performPush} 
+                            className="w-full text-sm"
+                            disabled={!hasUnpushedChanges}
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            git push origin main
+                          </Button>
+                        </div>
+                      </Card>
+
+                      <Card className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h5 className="font-medium flex items-center space-x-2">
+                            <Globe className="w-4 h-4" />
+                            <span>Remote (GitHub)</span>
+                          </h5>
+                          <Badge variant={hasUnpulledChanges ? "destructive" : "secondary"}>
+                            {remoteCommits} unpulled commits
+                          </Badge>
+                        </div>
+                        <div className="space-y-2">
+                          {hasUnpulledChanges && (
+                            <div className="flex items-center space-x-2 text-sm text-blue-600">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Remote changes available</span>
+                            </div>
+                          )}
+                          <Button 
+                            onClick={performPull} 
+                            className="w-full text-sm"
+                            disabled={!hasUnpulledChanges}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            git pull origin main
+                          </Button>
+                        </div>
+                      </Card>
+                    </div>
+
+                    {/* Sync Status */}
+                    <Card className="p-4 bg-gradient-to-r from-blue-500/10 to-green-500/10">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <RefreshCw className="w-5 h-5 text-primary" />
+                          <div>
+                            <h5 className="font-medium">Repository Status</h5>
+                            <p className="text-sm text-muted-foreground">
+                              {!hasUnpushedChanges && !hasUnpulledChanges 
+                                ? 'Local and remote repositories are in sync' 
+                                : 'Synchronization needed'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className={`w-3 h-3 rounded-full ${
+                          !hasUnpushedChanges && !hasUnpulledChanges ? 'bg-green-500' : 'bg-orange-500'
+                        }`}></div>
+                      </div>
+                    </Card>
+                  </div>
+                </TabsContent>
 
                 <TabsContent value="rebase" className="space-y-4">
                   <div>
@@ -343,31 +471,43 @@ export const GitAdvanced: React.FC = () => {
         </div>
 
         {/* Concept Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mt-12">
+        <div className="grid md:grid-cols-6 gap-6 mt-12">
           {[
+            {
+              icon: Upload,
+              title: "Git Push",
+              description: "Upload local commits to remote repository",
+              color: "electric-blue"
+            },
+            {
+              icon: Download,
+              title: "Git Pull",
+              description: "Download and merge remote changes",
+              color: "neon-green"
+            },
             {
               icon: RotateCcw,
               title: "Rebase",
               description: "Rewrite commit history for cleaner timeline",
-              color: "electric-blue"
+              color: "warm-orange"
             },
             {
               icon: Cherry,
               title: "Cherry Pick",
               description: "Apply specific commits to current branch",
-              color: "neon-green"
+              color: "electric-blue"
             },
             {
               icon: Archive,
               title: "Stash",
               description: "Temporarily save changes without committing",
-              color: "warm-orange"
+              color: "neon-green"
             },
             {
-              icon: RotateCcw,
+              icon: Settings,
               title: "Reset",
               description: "Move HEAD and branch pointer to specific commit",
-              color: "electric-blue"
+              color: "warm-orange"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;

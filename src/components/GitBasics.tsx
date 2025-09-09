@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw } from 'lucide-react';
+import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cloud } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,11 +10,20 @@ export const GitBasics: React.FC = () => {
   const [gitState, setGitState] = useState({
     initialized: false,
     staged: [] as string[],
-    committed: [] as { message: string; files: string[] }[]
+    committed: [] as { message: string; files: string[] }[],
+    configured: false,
+    cloned: false,
+    remoteAdded: false,
+    userName: '',
+    userEmail: ''
   });
 
   const commands = [
+    { cmd: 'git config --global user.name "Your Name"', desc: 'Set your Git username' },
+    { cmd: 'git config --global user.email "you@example.com"', desc: 'Set your Git email' },
+    { cmd: 'git clone https://github.com/riresearchlab/git', desc: 'Clone a repository from GitHub' },
     { cmd: 'git init', desc: 'Initialize a new Git repository' },
+    { cmd: 'git remote add origin https://github.com/riresearchlab/git', desc: 'Add remote repository' },
     { cmd: 'git add README.md', desc: 'Stage a file for commit' },
     { cmd: 'git commit -m "Initial commit"', desc: 'Create your first commit' },
     { cmd: 'git status', desc: 'Check repository status' },
@@ -25,9 +34,29 @@ export const GitBasics: React.FC = () => {
     setTerminalHistory(prev => [...prev, `$ ${command}`]);
     
     switch (command) {
+      case 'git config --global user.name "Your Name"':
+        setGitState(prev => ({ ...prev, userName: 'Your Name', configured: true }));
+        setTerminalHistory(prev => [...prev, 'Global username set to: Your Name']);
+        break;
+      case 'git config --global user.email "you@example.com"':
+        setGitState(prev => ({ ...prev, userEmail: 'you@example.com', configured: true }));
+        setTerminalHistory(prev => [...prev, 'Global email set to: you@example.com']);
+        break;
+      case 'git clone https://github.com/riresearchlab/git':
+        setGitState(prev => ({ ...prev, cloned: true, initialized: true }));
+        setTerminalHistory(prev => [...prev, 'Cloning into \'git\'...', 'remote: Enumerating objects: 15, done.', 'remote: Counting objects: 100% (15/15), done.', 'remote: Compressing objects: 100% (12/12), done.', 'remote: Total 15 (delta 2), reused 15 (delta 2), pack-reused 0', 'Unpacking objects: 100% (15/15), done.']);
+        break;
       case 'git init':
         setGitState(prev => ({ ...prev, initialized: true }));
         setTerminalHistory(prev => [...prev, 'Initialized empty Git repository in .git/']);
+        break;
+      case 'git remote add origin https://github.com/riresearchlab/git':
+        if (gitState.initialized) {
+          setGitState(prev => ({ ...prev, remoteAdded: true }));
+          setTerminalHistory(prev => [...prev, 'Remote origin added successfully']);
+        } else {
+          setTerminalHistory(prev => [...prev, 'fatal: not a git repository']);
+        }
         break;
       case 'git add README.md':
         if (gitState.initialized) {
@@ -61,7 +90,7 @@ export const GitBasics: React.FC = () => {
       case 'git log':
         if (gitState.committed.length > 0) {
           gitState.committed.forEach(commit => {
-            setTerminalHistory(prev => [...prev, `commit abc${Math.random().toString().slice(2, 8)}`, `Author: You <you@example.com>`, `Date: ${new Date().toDateString()}`, '', `    ${commit.message}`, '']);
+            setTerminalHistory(prev => [...prev, `commit abc${Math.random().toString().slice(2, 8)}`, `Author: ${gitState.userName || 'You'} <${gitState.userEmail || 'you@example.com'}>`, `Date: ${new Date().toDateString()}`, '', `    ${commit.message}`, '']);
           });
         } else {
           setTerminalHistory(prev => [...prev, 'fatal: your current branch \'main\' does not have any commits yet']);
@@ -72,7 +101,16 @@ export const GitBasics: React.FC = () => {
 
   const resetDemo = () => {
     setTerminalHistory([]);
-    setGitState({ initialized: false, staged: [], committed: [] });
+    setGitState({ 
+      initialized: false, 
+      staged: [], 
+      committed: [], 
+      configured: false, 
+      cloned: false, 
+      remoteAdded: false, 
+      userName: '', 
+      userEmail: '' 
+    });
     setCurrentStep(0);
   };
 
@@ -154,12 +192,44 @@ export const GitBasics: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
+                {/* Git Configuration */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold flex items-center space-x-2">
+                    <Settings className="w-4 h-4" />
+                    <span>Git Configuration</span>
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
+                      <div className={`w-3 h-3 rounded-full ${gitState.userName ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                      <span className="text-sm">User: {gitState.userName || 'Not configured'}</span>
+                    </div>
+                    <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
+                      <div className={`w-3 h-3 rounded-full ${gitState.userEmail ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                      <span className="text-sm">Email: {gitState.userEmail || 'Not configured'}</span>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Repository Status */}
-                <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
-                  <div className={`w-4 h-4 rounded-full ${gitState.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                  <span className={gitState.initialized ? 'text-green-400' : 'text-gray-400'}>
-                    Repository {gitState.initialized ? 'Initialized' : 'Not Initialized'}
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                    <div className={`w-4 h-4 rounded-full ${gitState.cloned ? 'bg-blue-500' : 'bg-gray-400'}`}></div>
+                    <span className={gitState.cloned ? 'text-blue-400' : 'text-gray-400'}>
+                      Repository {gitState.cloned ? 'Cloned from GitHub' : 'Not cloned'}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                    <div className={`w-4 h-4 rounded-full ${gitState.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                    <span className={gitState.initialized ? 'text-green-400' : 'text-gray-400'}>
+                      Repository {gitState.initialized ? 'Initialized' : 'Not Initialized'}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                    <div className={`w-4 h-4 rounded-full ${gitState.remoteAdded ? 'bg-purple-500' : 'bg-gray-400'}`}></div>
+                    <span className={gitState.remoteAdded ? 'text-purple-400' : 'text-gray-400'}>
+                      Remote Origin {gitState.remoteAdded ? 'Added' : 'Not added'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Staging Area */}
@@ -211,25 +281,37 @@ export const GitBasics: React.FC = () => {
         </div>
 
         {/* Concept Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
+        <div className="grid md:grid-cols-5 gap-6 mt-12">
           {[
+            {
+              icon: Settings,
+              title: "Git Config",
+              description: "Set up your Git identity and preferences",
+              color: "electric-blue"
+            },
+            {
+              icon: Download,
+              title: "Git Clone",
+              description: "Download repository from remote server",
+              color: "neon-green"
+            },
             {
               icon: Terminal,
               title: "Working Directory",
               description: "Your project files where you make changes",
-              color: "electric-blue"
+              color: "warm-orange"
             },
             {
               icon: Plus,
               title: "Staging Area",
               description: "Prepared changes ready for commit",
-              color: "neon-green"
+              color: "electric-blue"
             },
             {
-              icon: Save,
-              title: "Repository",
-              description: "Permanent storage of your project history",
-              color: "warm-orange"
+              icon: Cloud,
+              title: "Remote Repository",
+              description: "External repository for collaboration",
+              color: "neon-green"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;
