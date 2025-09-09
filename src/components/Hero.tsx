@@ -60,37 +60,6 @@ export const Hero: React.FC = () => {
               })}
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button className="btn-hero text-lg px-8 py-6">
-                Start Learning Now
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="btn-secondary-hero text-lg px-8 py-6 group"
-              >
-                <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-                Watch Demo
-              </Button>
-            </div>
-
-            {/* Stats */}
-            <div className="flex space-x-8 pt-8">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary">10K+</div>
-                <div className="text-sm text-muted-foreground">Active Learners</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-accent">50+</div>
-                <div className="text-sm text-muted-foreground">Interactive Lessons</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-warm-orange">98%</div>
-                <div className="text-sm text-muted-foreground">Success Rate</div>
-              </div>
-            </div>
           </div>
 
           {/* 3D Logo Side */}
