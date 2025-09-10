@@ -209,172 +209,162 @@ export const GitAdvanced: React.FC = () => {
               <CardTitle>Advanced Operations</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="remote" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="remote">Push/Pull</TabsTrigger>
-                  <TabsTrigger value="rebase">Rebase</TabsTrigger>
-                  <TabsTrigger value="cherry-pick">Cherry Pick</TabsTrigger>
-                  <TabsTrigger value="stash">Stash</TabsTrigger>
-                  <TabsTrigger value="reset">Reset</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="remote" className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Remote Operations</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Synchronize your local repository with remote GitHub repository
-                    </p>
-                    
-                    {/* Remote Status Visualization */}
-                    <div className="grid md:grid-cols-2 gap-4 mb-6">
-                      <Card className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-medium flex items-center space-x-2">
-                            <Terminal className="w-4 h-4" />
-                            <span>Local Repository</span>
-                          </h5>
-                          <Badge variant={hasUnpushedChanges ? "destructive" : "secondary"}>
-                            {localCommits} unpushed commits
-                          </Badge>
-                        </div>
-                        <div className="space-y-2">
-                          {hasUnpushedChanges && (
-                            <div className="flex items-center space-x-2 text-sm text-yellow-600">
-                              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                              <span>Local changes ready to push</span>
-                            </div>
-                          )}
-                          <Button 
-                            onClick={performPush} 
-                            className="w-full text-sm"
-                            disabled={!hasUnpushedChanges}
-                          >
-                            <Upload className="w-4 h-4 mr-2" />
-                            git push origin main
-                          </Button>
-                        </div>
-                      </Card>
-
-                      <Card className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-medium flex items-center space-x-2">
-                            <Globe className="w-4 h-4" />
-                            <span>Remote (GitHub)</span>
-                          </h5>
-                          <Badge variant={hasUnpulledChanges ? "destructive" : "secondary"}>
-                            {remoteCommits} unpulled commits
-                          </Badge>
-                        </div>
-                        <div className="space-y-2">
-                          {hasUnpulledChanges && (
-                            <div className="flex items-center space-x-2 text-sm text-blue-600">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                              <span>Remote changes available</span>
-                            </div>
-                          )}
-                          <Button 
-                            onClick={performPull} 
-                            className="w-full text-sm"
-                            disabled={!hasUnpulledChanges}
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            git pull origin main
-                          </Button>
-                        </div>
-                      </Card>
-                    </div>
-
-                    {/* Sync Status */}
-                    <Card className="p-4 bg-gradient-to-r from-blue-500/10 to-green-500/10">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <RefreshCw className="w-5 h-5 text-primary" />
-                          <div>
-                            <h5 className="font-medium">Repository Status</h5>
-                            <p className="text-sm text-muted-foreground">
-                              {!hasUnpushedChanges && !hasUnpulledChanges 
-                                ? 'Local and remote repositories are in sync' 
-                                : 'Synchronization needed'}
-                            </p>
+              <div className="space-y-8">
+                {/* Remote Operations */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold mb-2">Remote Operations</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Synchronize your local repository with remote GitHub repository
+                  </p>
+                  
+                  {/* Remote Status Visualization */}
+                  <div className="grid md:grid-cols-2 gap-4 mb-6">
+                    <Card className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="font-medium flex items-center space-x-2">
+                          <Terminal className="w-4 h-4" />
+                          <span>Local Repository</span>
+                        </h5>
+                        <Badge variant={hasUnpushedChanges ? "destructive" : "secondary"}>
+                          {localCommits} unpushed commits
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        {hasUnpushedChanges && (
+                          <div className="flex items-center space-x-2 text-sm text-yellow-600">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            <span>Local changes ready to push</span>
                           </div>
-                        </div>
-                        <div className={`w-3 h-3 rounded-full ${
-                          !hasUnpushedChanges && !hasUnpulledChanges ? 'bg-green-500' : 'bg-orange-500'
-                        }`}></div>
+                        )}
+                        <Button 
+                          onClick={performPush} 
+                          className="w-full text-sm"
+                          disabled={!hasUnpushedChanges}
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          git push origin main
+                        </Button>
+                      </div>
+                    </Card>
+
+                    <Card className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="font-medium flex items-center space-x-2">
+                          <Globe className="w-4 h-4" />
+                          <span>Remote (GitHub)</span>
+                        </h5>
+                        <Badge variant={hasUnpulledChanges ? "destructive" : "secondary"}>
+                          {remoteCommits} unpulled commits
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        {hasUnpulledChanges && (
+                          <div className="flex items-center space-x-2 text-sm text-blue-600">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span>Remote changes available</span>
+                          </div>
+                        )}
+                        <Button 
+                          onClick={performPull} 
+                          className="w-full text-sm"
+                          disabled={!hasUnpulledChanges}
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          git pull origin main
+                        </Button>
                       </div>
                     </Card>
                   </div>
-                </TabsContent>
 
-                <TabsContent value="rebase" className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Interactive Rebase</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Rewrite commit history by moving commits to a new base
-                    </p>
-                    
-                    <div className="space-y-2 mb-4">
-                      <div className="text-sm font-medium">Commit History:</div>
-                      {commits.slice().reverse().map((commit) => (
-                        <div key={commit.id} className="flex items-center justify-between p-2 bg-surface-elevated rounded">
-                          <div className="flex items-center space-x-2">
-                            <code className="text-xs bg-primary/20 px-2 py-1 rounded">{commit.hash}</code>
-                            <span className="text-sm">{commit.message}</span>
-                          </div>
-                          <Button
-                            size="sm"
-                            onClick={() => performRebase(commit.hash)}
-                            className="text-xs"
-                          >
-                            Rebase onto this
-                          </Button>
+                  {/* Sync Status */}
+                  <Card className="p-4 bg-gradient-to-r from-blue-500/10 to-green-500/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <RefreshCw className="w-5 h-5 text-primary" />
+                        <div>
+                          <h5 className="font-medium">Repository Status</h5>
+                          <p className="text-sm text-muted-foreground">
+                            {!hasUnpushedChanges && !hasUnpulledChanges 
+                              ? 'Local and remote repositories are in sync' 
+                              : 'Synchronization needed'}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-
-                    {rebaseResult.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="text-sm font-medium">Rebased Result:</div>
-                        {rebaseResult.slice().reverse().map((commit) => (
-                          <div key={commit.id} className="flex items-center space-x-2 p-2 bg-accent/20 rounded">
-                            <code className="text-xs bg-accent/30 px-2 py-1 rounded">{commit.hash}</code>
-                            <span className="text-sm">{commit.message}</span>
-                          </div>
-                        ))}
                       </div>
-                    )}
-                  </div>
-                </TabsContent>
+                      <div className={`w-3 h-3 rounded-full ${
+                        !hasUnpushedChanges && !hasUnpulledChanges ? 'bg-green-500' : 'bg-orange-500'
+                      }`}></div>
+                    </div>
+                  </Card>
+                </div>
 
-                <TabsContent value="cherry-pick" className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Cherry Pick Commits</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Apply specific commits from other branches
-                    </p>
-                    
-                    <div className="grid gap-2">
-                      {commits.map((commit) => (
-                        <div key={commit.id} className="flex items-center justify-between p-2 bg-surface-elevated rounded">
-                          <div className="flex items-center space-x-2">
-                            <Cherry className="w-4 h-4 text-red-400" />
-                            <code className="text-xs bg-primary/20 px-2 py-1 rounded">{commit.hash}</code>
-                            <span className="text-sm">{commit.message}</span>
-                          </div>
-                          <Button
-                            size="sm"
-                            onClick={() => cherryPick(commit.hash)}
-                            className="text-xs"
-                          >
-                            Cherry Pick
-                          </Button>
+                {/* Interactive Rebase */}
+                <div className="space-y-4 border-t pt-8">
+                  <h4 className="font-semibold mb-2">Interactive Rebase</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Rewrite commit history by moving commits to a new base
+                  </p>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="text-sm font-medium">Commit History:</div>
+                    {commits.slice().reverse().map((commit) => (
+                      <div key={commit.id} className="flex items-center justify-between p-2 bg-surface-elevated rounded">
+                        <div className="flex items-center space-x-2">
+                          <code className="text-xs bg-primary/20 px-2 py-1 rounded">{commit.hash}</code>
+                          <span className="text-sm">{commit.message}</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => performRebase(commit.hash)}
+                          className="text-xs"
+                        >
+                          Rebase onto this
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {rebaseResult.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Rebased Result:</div>
+                      {rebaseResult.slice().reverse().map((commit) => (
+                        <div key={commit.id} className="flex items-center space-x-2 p-2 bg-accent/20 rounded">
+                          <code className="text-xs bg-accent/30 px-2 py-1 rounded">{commit.hash}</code>
+                          <span className="text-sm">{commit.message}</span>
                         </div>
                       ))}
                     </div>
-                  </div>
-                </TabsContent>
+                  )}
+                </div>
 
-                <TabsContent value="stash" className="space-y-4">
+                {/* Cherry Pick */}
+                <div className="space-y-4 border-t pt-8">
+                  <h4 className="font-semibold mb-2">Cherry Pick Commits</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Apply specific commits from other branches
+                  </p>
+                  
+                  <div className="grid gap-2">
+                    {commits.map((commit) => (
+                      <div key={commit.id} className="flex items-center justify-between p-2 bg-surface-elevated rounded">
+                        <div className="flex items-center space-x-2">
+                          <Cherry className="w-4 h-4 text-red-400" />
+                          <code className="text-xs bg-primary/20 px-2 py-1 rounded">{commit.hash}</code>
+                          <span className="text-sm">{commit.message}</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => cherryPick(commit.hash)}
+                          className="text-xs"
+                        >
+                          Cherry Pick
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stash */}
+                <div className="space-y-4 border-t pt-8">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <h4 className="font-semibold mb-2">Working Directory</h4>
@@ -430,42 +420,41 @@ export const GitAdvanced: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </TabsContent>
+                </div>
 
-                <TabsContent value="reset" className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Git Reset Operations</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Reset your repository to a specific state
-                    </p>
-                    
-                    <div className="grid gap-3">
-                      {['--soft', '--mixed', '--hard'].map((mode) => (
-                        <Card key={mode} className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h5 className="font-medium">git reset {mode}</h5>
-                              <p className="text-sm text-muted-foreground">
-                                {mode === '--soft' && 'Keep changes in staging area'}
-                                {mode === '--mixed' && 'Keep changes in working directory'}
-                                {mode === '--hard' && 'Discard all changes (destructive)'}
-                              </p>
-                            </div>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => addOutput(`git reset ${mode} HEAD~1`, `HEAD is now at ${commits[commits.length - 2]?.hash} ${commits[commits.length - 2]?.message}`)}
-                            >
-                              <RotateCcw className="w-4 h-4 mr-1" />
-                              Reset
-                            </Button>
+                {/* Reset Operations */}
+                <div className="space-y-4 border-t pt-8">
+                  <h4 className="font-semibold mb-2">Git Reset Operations</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Reset your repository to a specific state
+                  </p>
+                  
+                  <div className="grid gap-3">
+                    {['--soft', '--mixed', '--hard'].map((mode) => (
+                      <Card key={mode} className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h5 className="font-medium">git reset {mode}</h5>
+                            <p className="text-sm text-muted-foreground">
+                              {mode === '--soft' && 'Keep changes in staging area'}
+                              {mode === '--mixed' && 'Keep changes in working directory'}
+                              {mode === '--hard' && 'Discard all changes (destructive)'}
+                            </p>
                           </div>
-                        </Card>
-                      ))}
-                    </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => addOutput(`git reset ${mode} HEAD~1`, `HEAD is now at ${commits[commits.length - 2]?.hash} ${commits[commits.length - 2]?.message}`)}
+                          >
+                            <RotateCcw className="w-4 h-4 mr-1" />
+                            Reset
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
-                </TabsContent>
-              </Tabs>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
