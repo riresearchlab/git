@@ -130,6 +130,55 @@ export const GitBasics: React.FC = () => {
           </p>
         </div>
 
+        {/* Concept Cards */}
+        <div className="grid md:grid-cols-5 gap-6 mb-12">
+          {[
+            {
+              icon: Settings,
+              title: "Git Config",
+              description: "Set up your Git identity and preferences",
+              color: "electric-blue"
+            },
+            {
+              icon: Download,
+              title: "Git Clone",
+              description: "Download repository from remote server",
+              color: "neon-green"
+            },
+            {
+              icon: Terminal,
+              title: "Working Directory",
+              description: "Your project files where you make changes",
+              color: "warm-orange"
+            },
+            {
+              icon: Plus,
+              title: "Staging Area",
+              description: "Prepared changes ready for commit",
+              color: "electric-blue"
+            },
+            {
+              icon: Cloud,
+              title: "Remote Repository",
+              description: "External repository for collaboration",
+              color: "neon-green"
+            }
+          ].map((concept, idx) => {
+            const Icon = concept.icon;
+            return (
+              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                    <Icon className={`w-8 h-8 text-${concept.color}`} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                  <p className="text-muted-foreground">{concept.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Interactive Terminal */}
           <Card className="card-glow glow-blue h-fit">
@@ -278,55 +327,6 @@ export const GitBasics: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Concept Cards */}
-        <div className="grid md:grid-cols-5 gap-6 mt-12">
-          {[
-            {
-              icon: Settings,
-              title: "Git Config",
-              description: "Set up your Git identity and preferences",
-              color: "electric-blue"
-            },
-            {
-              icon: Download,
-              title: "Git Clone",
-              description: "Download repository from remote server",
-              color: "neon-green"
-            },
-            {
-              icon: Terminal,
-              title: "Working Directory",
-              description: "Your project files where you make changes",
-              color: "warm-orange"
-            },
-            {
-              icon: Plus,
-              title: "Staging Area",
-              description: "Prepared changes ready for commit",
-              color: "electric-blue"
-            },
-            {
-              icon: Cloud,
-              title: "Remote Repository",
-              description: "External repository for collaboration",
-              color: "neon-green"
-            }
-          ].map((concept, idx) => {
-            const Icon = concept.icon;
-            return (
-              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                    <Icon className={`w-8 h-8 text-${concept.color}`} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                  <p className="text-muted-foreground">{concept.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
         </div>
       </div>
     </section>

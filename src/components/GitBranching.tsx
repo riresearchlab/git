@@ -187,6 +187,43 @@ export const GitBranching: React.FC = () => {
           </p>
         </div>
 
+        {/* Concept Explanation */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {[
+            {
+              icon: GitBranch,
+              title: "Branching",
+              description: "Create parallel development paths for features or experiments",
+              color: "electric-blue"
+            },
+            {
+              icon: GitMerge,
+              title: "Merging",
+              description: "Combine changes from different branches back together",
+              color: "neon-green"
+            },
+            {
+              icon: ArrowRight,
+              title: "Workflow",
+              description: "Organize team collaboration with feature branches",
+              color: "warm-orange"
+            }
+          ].map((concept, idx) => {
+            const Icon = concept.icon;
+            return (
+              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                    <Icon className={`w-8 h-8 text-${concept.color}`} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                  <p className="text-muted-foreground">{concept.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* 3D Visualization */}
           <Card className="card-glow glow-blue">
@@ -322,43 +359,6 @@ export const GitBranching: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Concept Explanation */}
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
-          {[
-            {
-              icon: GitBranch,
-              title: "Branching",
-              description: "Create parallel development paths for features or experiments",
-              color: "electric-blue"
-            },
-            {
-              icon: GitMerge,
-              title: "Merging",
-              description: "Combine changes from different branches back together",
-              color: "neon-green"
-            },
-            {
-              icon: ArrowRight,
-              title: "Workflow",
-              description: "Organize team collaboration with feature branches",
-              color: "warm-orange"
-            }
-          ].map((concept, idx) => {
-            const Icon = concept.icon;
-            return (
-              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                    <Icon className={`w-8 h-8 text-${concept.color}`} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                  <p className="text-muted-foreground">{concept.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
         </div>
       </div>
     </section>

@@ -172,6 +172,61 @@ export const GitAdvanced: React.FC = () => {
           </p>
         </div>
 
+        {/* Concept Cards */}
+        <div className="grid md:grid-cols-6 gap-6 mb-12">
+          {[
+            {
+              icon: Upload,
+              title: "Git Push",
+              description: "Upload local commits to remote repository",
+              color: "electric-blue"
+            },
+            {
+              icon: Download,
+              title: "Git Pull",
+              description: "Download and merge remote changes",
+              color: "neon-green"
+            },
+            {
+              icon: RotateCcw,
+              title: "Rebase",
+              description: "Rewrite commit history for cleaner timeline",
+              color: "warm-orange"
+            },
+            {
+              icon: Cherry,
+              title: "Cherry Pick",
+              description: "Apply specific commits to current branch",
+              color: "electric-blue"
+            },
+            {
+              icon: Archive,
+              title: "Stash",
+              description: "Temporarily save changes without committing",
+              color: "neon-green"
+            },
+            {
+              icon: Settings,
+              title: "Reset",
+              description: "Move HEAD and branch pointer to specific commit",
+              color: "warm-orange"
+            }
+          ].map((concept, idx) => {
+            const Icon = concept.icon;
+            return (
+              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-12 h-12 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                    <Icon className={`w-6 h-6 text-${concept.color}`} />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">{concept.title}</h3>
+                  <p className="text-sm text-muted-foreground">{concept.description}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Terminal Output */}
           <Card className="card-glow glow-blue lg:col-span-1">
@@ -459,60 +514,6 @@ export const GitAdvanced: React.FC = () => {
           </Card>
         </div>
 
-        {/* Concept Cards */}
-        <div className="grid md:grid-cols-6 gap-6 mt-12">
-          {[
-            {
-              icon: Upload,
-              title: "Git Push",
-              description: "Upload local commits to remote repository",
-              color: "electric-blue"
-            },
-            {
-              icon: Download,
-              title: "Git Pull",
-              description: "Download and merge remote changes",
-              color: "neon-green"
-            },
-            {
-              icon: RotateCcw,
-              title: "Rebase",
-              description: "Rewrite commit history for cleaner timeline",
-              color: "warm-orange"
-            },
-            {
-              icon: Cherry,
-              title: "Cherry Pick",
-              description: "Apply specific commits to current branch",
-              color: "electric-blue"
-            },
-            {
-              icon: Archive,
-              title: "Stash",
-              description: "Temporarily save changes without committing",
-              color: "neon-green"
-            },
-            {
-              icon: Settings,
-              title: "Reset",
-              description: "Move HEAD and branch pointer to specific commit",
-              color: "warm-orange"
-            }
-          ].map((concept, idx) => {
-            const Icon = concept.icon;
-            return (
-              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-12 h-12 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                    <Icon className={`w-6 h-6 text-${concept.color}`} />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">{concept.title}</h3>
-                  <p className="text-sm text-muted-foreground">{concept.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
       </div>
     </section>
   );
