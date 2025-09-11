@@ -30,112 +30,121 @@ function BranchVisualization({ branches }: { branches: Branch[] }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size with proper scaling
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+    // Set canvas size properly
+    const container = canvas.parentElement;
+    if (!container) return;
+    
+    const rect = container.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
 
-    // Clear canvas
-    ctx.fillStyle = '#0a0f1c';
-    ctx.fillRect(0, 0, rect.width, rect.height);
+    // Clear canvas with dark background
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Grid settings
-    const commitRadius = 8;
-    const laneWidth = 40;
-    const commitSpacing = 60;
+    if (branches.length === 0) return;
+
+    // Calculate layout
+    const commitRadius = 6;
+    const laneWidth = 30;
+    const commitSpacing = 50;
     const startY = 40;
-    const startX = 60;
+    const startX = 40;
+    const maxCommits = Math.max(...branches.map(b => b.commits.length));
 
-    // Draw branches and commits
+    // Draw network lines first (behind commits)
     branches.forEach((branch) => {
-      if (branch.commits.length === 0) return;
+      if (branch.commits.length <= 1) return;
 
-      // Draw branch line
       ctx.strokeStyle = branch.color;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.setLineDash([]);
 
-      if (branch.commits.length > 1) {
-        ctx.beginPath();
-        const x = startX + branch.lane * laneWidth;
-        ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY + (branch.commits.length - 1) * commitSpacing);
-        ctx.stroke();
-      }
+      const x = startX + branch.lane * laneWidth;
+      ctx.beginPath();
+      ctx.moveTo(x, startY);
+      ctx.lineTo(x, startY + (branch.commits.length - 1) * commitSpacing);
+      ctx.stroke();
+    });
 
-      // Draw commits
-      branch.commits.forEach((commit, index) => {
-        const x = startX + branch.lane * laneWidth;
-        const y = startY + index * commitSpacing;
+    // Draw merge lines
+    branches.forEach((branch) => {
+      branch.commits.forEach((commit, commitIdx) => {
+        if (commit.message.toLowerCase().includes('merge')) {
+          const targetX = startX + branch.lane * laneWidth;
+          const targetY = startY + commitIdx * commitSpacing;
+          
+          // Find source branch (assume it's the previous branch)
+          const sourceBranch = branches.find(b => b.name !== branch.name && b.commits.length > 0);
+          if (sourceBranch) {
+            const sourceX = startX + sourceBranch.lane * laneWidth;
+            const sourceY = targetY - commitSpacing;
 
-        // Commit circle
+            ctx.strokeStyle = branch.color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([3, 3]);
+            
+            ctx.beginPath();
+            ctx.moveTo(sourceX, sourceY);
+            ctx.quadraticCurveTo(
+              sourceX + (targetX - sourceX) * 0.5, 
+              sourceY + (targetY - sourceY) * 0.3,
+              targetX, 
+              targetY
+            );
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        }
+      });
+    });
+
+    // Draw commits and labels
+    branches.forEach((branch) => {
+      branch.commits.forEach((commit, commitIdx) => {
+        const x = startX + branch.lane * laneWidth;
+        const y = startY + commitIdx * commitSpacing;
+
+        // Draw commit circle
         ctx.beginPath();
         ctx.arc(x, y, commitRadius, 0, 2 * Math.PI);
         ctx.fillStyle = branch.color;
         ctx.fill();
         
+        // Add white border for active branch
         if (branch.active) {
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;
           ctx.stroke();
         }
 
-        // Commit message (abbreviated)
+        // Draw commit message
         ctx.fillStyle = '#e2e8f0';
-        ctx.font = '12px monospace';
+        ctx.font = 'bold 12px system-ui';
         ctx.textAlign = 'left';
-        const message = commit.message.length > 20 ? commit.message.substring(0, 20) + '...' : commit.message;
-        ctx.fillText(message, x + 15, y + 4);
+        const message = commit.message.length > 35 ? commit.message.substring(0, 35) + '...' : commit.message;
+        ctx.fillText(message, x + 15, y - 2);
 
-        // Commit hash
-        ctx.fillStyle = '#64748b';
-        ctx.font = '10px monospace';
-        ctx.fillText(commit.id.substring(0, 7), x + 15, y + 18);
-      });
-    });
-
-    // Draw merge lines if needed
-    branches.forEach((branch) => {
-      branch.commits.forEach((commit) => {
-        if (commit.message.includes('Merge')) {
-          // Find source and target branches
-          const targetBranch = branches.find(b => b.name === commit.branch);
-          const sourceBranchName = commit.message.match(/Merge branch '(.+)'/)?.[1];
-          const sourceBranch = branches.find(b => b.name === sourceBranchName);
-
-          if (targetBranch && sourceBranch && targetBranch !== sourceBranch) {
-            ctx.strokeStyle = targetBranch.color;
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            
-            const sourceX = startX + sourceBranch.lane * laneWidth;
-            const targetX = startX + targetBranch.lane * laneWidth;
-            const commitIndex = targetBranch.commits.findIndex(c => c.id === commit.id);
-            const y = startY + commitIndex * commitSpacing;
-
-            ctx.beginPath();
-            ctx.moveTo(sourceX, y - commitSpacing);
-            ctx.quadraticCurveTo(sourceX + (targetX - sourceX) / 2, y - commitSpacing / 2, targetX, y);
-            ctx.stroke();
-          }
-        }
+        // Draw commit hash
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px Monaco, monospace';
+        ctx.fillText(commit.id.substring(0, 8), x + 15, y + 12);
       });
     });
 
   }, [branches]);
 
   return (
-    <div className="h-80 w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-700 relative">
+    <div className="h-80 w-full bg-slate-800/50 rounded-lg overflow-hidden border border-slate-600 relative">
+      <div className="absolute top-3 left-3 text-slate-300 text-xs font-mono bg-slate-700/80 px-2 py-1 rounded">
+        GRAPH
+      </div>
       <canvas
         ref={canvasRef}
         className="w-full h-full"
-        style={{ width: '100%', height: '100%' }}
       />
-      <div className="absolute top-3 left-3 text-slate-300 text-sm font-mono">
-        GRAPH
-      </div>
     </div>
   );
 }
