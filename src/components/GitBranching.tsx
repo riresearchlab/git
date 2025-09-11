@@ -1,63 +1,140 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GitBranch, GitMerge, Plus, ArrowRight, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import * as THREE from 'three';
+
+interface Commit {
+  id: string;
+  message: string;
+  x: number;
+  y: number;
+  branch: string;
+}
 
 interface Branch {
   name: string;
-  commits: { id: string; message: string; position: [number, number, number] }[];
+  commits: Commit[];
   color: string;
   active: boolean;
+  lane: number;
 }
 
 function BranchVisualization({ branches }: { branches: Branch[] }) {
-  return (
-    <div className="h-64 w-full bg-black/20 rounded-lg overflow-hidden">
-      <Canvas camera={{ position: [0, 2, 8], fov: 50 }}>
-        <ambientLight intensity={0.6} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas size
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    // Clear canvas
+    ctx.fillStyle = '#0a0f1c';
+    ctx.fillRect(0, 0, rect.width, rect.height);
+
+    // Grid settings
+    const commitRadius = 8;
+    const laneWidth = 40;
+    const commitSpacing = 60;
+    const startY = 40;
+    const startX = 60;
+
+    // Draw branches and commits
+    branches.forEach((branch) => {
+      if (branch.commits.length === 0) return;
+
+      // Draw branch line
+      ctx.strokeStyle = branch.color;
+      ctx.lineWidth = 3;
+      ctx.setLineDash([]);
+
+      if (branch.commits.length > 1) {
+        ctx.beginPath();
+        const x = startX + branch.lane * laneWidth;
+        ctx.moveTo(x, startY);
+        ctx.lineTo(x, startY + (branch.commits.length - 1) * commitSpacing);
+        ctx.stroke();
+      }
+
+      // Draw commits
+      branch.commits.forEach((commit, index) => {
+        const x = startX + branch.lane * laneWidth;
+        const y = startY + index * commitSpacing;
+
+        // Commit circle
+        ctx.beginPath();
+        ctx.arc(x, y, commitRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = branch.color;
+        ctx.fill();
         
-        {branches.map((branch, branchIdx) => (
-          <group key={branch.name}>
-            {/* Branch commits */}
-            {branch.commits.map((commit, commitIdx) => (
-              <mesh key={commit.id} position={commit.position}>
-                <sphereGeometry args={[0.15, 16, 16]} />
-                <meshStandardMaterial 
-                  color={branch.color}
-                  emissive={branch.active ? branch.color : '#000000'}
-                  emissiveIntensity={branch.active ? 0.2 : 0}
-                />
-              </mesh>
-            ))}
+        if (branch.active) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        // Commit message (abbreviated)
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '12px monospace';
+        ctx.textAlign = 'left';
+        const message = commit.message.length > 20 ? commit.message.substring(0, 20) + '...' : commit.message;
+        ctx.fillText(message, x + 15, y + 4);
+
+        // Commit hash
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px monospace';
+        ctx.fillText(commit.id.substring(0, 7), x + 15, y + 18);
+      });
+    });
+
+    // Draw merge lines if needed
+    branches.forEach((branch) => {
+      branch.commits.forEach((commit) => {
+        if (commit.message.includes('Merge')) {
+          // Find source and target branches
+          const targetBranch = branches.find(b => b.name === commit.branch);
+          const sourceBranchName = commit.message.match(/Merge branch '(.+)'/)?.[1];
+          const sourceBranch = branches.find(b => b.name === sourceBranchName);
+
+          if (targetBranch && sourceBranch && targetBranch !== sourceBranch) {
+            ctx.strokeStyle = targetBranch.color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
             
-            {/* Branch lines */}
-            {branch.commits.length > 1 && branch.commits.map((commit, idx) => {
-              if (idx === branch.commits.length - 1) return null;
-              const start = commit.position;
-              const end = branch.commits[idx + 1].position;
-              const midpoint = [
-                (start[0] + end[0]) / 2,
-                (start[1] + end[1]) / 2,
-                (start[2] + end[2]) / 2
-              ] as [number, number, number];
-              
-              return (
-                <mesh key={`line-${idx}`} position={midpoint}>
-                  <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
-                  <meshStandardMaterial color={branch.color} />
-                </mesh>
-              );
-            })}
-          </group>
-        ))}
-        
-        <OrbitControls enableZoom={true} enablePan={false} />
-      </Canvas>
+            const sourceX = startX + sourceBranch.lane * laneWidth;
+            const targetX = startX + targetBranch.lane * laneWidth;
+            const commitIndex = targetBranch.commits.findIndex(c => c.id === commit.id);
+            const y = startY + commitIndex * commitSpacing;
+
+            ctx.beginPath();
+            ctx.moveTo(sourceX, y - commitSpacing);
+            ctx.quadraticCurveTo(sourceX + (targetX - sourceX) / 2, y - commitSpacing / 2, targetX, y);
+            ctx.stroke();
+          }
+        }
+      });
+    });
+
+  }, [branches]);
+
+  return (
+    <div className="h-80 w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-700 relative">
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full"
+        style={{ width: '100%', height: '100%' }}
+      />
+      <div className="absolute top-3 left-3 text-slate-300 text-sm font-mono">
+        GRAPH
+      </div>
     </div>
   );
 }
@@ -67,11 +144,12 @@ export const GitBranching: React.FC = () => {
     {
       name: 'main',
       commits: [
-        { id: 'c1', message: 'Initial commit', position: [-2, 0, 0] },
-        { id: 'c2', message: 'Add README', position: [-1, 0, 0] },
+        { id: 'c1', message: 'Initial commit', x: 0, y: 0, branch: 'main' },
+        { id: 'c2', message: 'Add README', x: 0, y: 1, branch: 'main' },
       ],
       color: '#0099CC',
-      active: true
+      active: true,
+      lane: 0
     }
   ]);
   const [currentBranch, setCurrentBranch] = useState('main');
@@ -86,15 +164,19 @@ export const GitBranching: React.FC = () => {
     if (!activeBranch || branches.some(b => b.name === branchName)) return;
 
     const lastCommit = activeBranch.commits[activeBranch.commits.length - 1];
+    const newLane = Math.max(...branches.map(b => b.lane)) + 1;
     const newBranch: Branch = {
       name: branchName,
       commits: [{ 
         id: `${branchName}-start`, 
         message: `Branch point from ${currentBranch}`, 
-        position: [lastCommit.position[0], lastCommit.position[1] + 1, lastCommit.position[2]] 
+        x: newLane,
+        y: lastCommit.y,
+        branch: branchName
       }],
       color: branchName === 'feature' ? '#00FF7F' : '#FF6600',
-      active: false
+      active: false,
+      lane: newLane
     };
 
     setBranches(prev => prev.map(b => ({ ...b, active: false })).concat(newBranch));
@@ -113,14 +195,12 @@ export const GitBranching: React.FC = () => {
     setBranches(prev => prev.map(branch => {
       if (branch.name === currentBranch) {
         const lastCommit = branch.commits[branch.commits.length - 1];
-        const newCommit = {
+        const newCommit: Commit = {
           id: `${branch.name}-${Date.now()}`,
           message,
-          position: [
-            lastCommit.position[0] + 1,
-            lastCommit.position[1],
-            lastCommit.position[2]
-          ] as [number, number, number]
+          x: branch.lane,
+          y: lastCommit.y + 1,
+          branch: branch.name
         };
         return { ...branch, commits: [...branch.commits, newCommit] };
       }
@@ -135,14 +215,12 @@ export const GitBranching: React.FC = () => {
     
     if (!source || !target || sourceBranch === currentBranch) return;
 
-    const mergeCommit = {
+    const mergeCommit: Commit = {
       id: `merge-${Date.now()}`,
       message: `Merge branch '${sourceBranch}' into ${currentBranch}`,
-      position: [
-        target.commits[target.commits.length - 1].position[0] + 1,
-        target.commits[target.commits.length - 1].position[1],
-        target.commits[target.commits.length - 1].position[2]
-      ] as [number, number, number]
+      x: target.lane,
+      y: target.commits[target.commits.length - 1].y + 1,
+      branch: currentBranch
     };
 
     setBranches(prev => prev.map(branch => {
@@ -160,11 +238,12 @@ export const GitBranching: React.FC = () => {
       {
         name: 'main',
         commits: [
-          { id: 'c1', message: 'Initial commit', position: [-2, 0, 0] },
-          { id: 'c2', message: 'Add README', position: [-1, 0, 0] },
+          { id: 'c1', message: 'Initial commit', x: 0, y: 0, branch: 'main' },
+          { id: 'c2', message: 'Add README', x: 0, y: 1, branch: 'main' },
         ],
         color: '#0099CC',
-        active: true
+        active: true,
+        lane: 0
       }
     ]);
     setCurrentBranch('main');
