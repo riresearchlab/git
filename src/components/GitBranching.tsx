@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GitBranch, GitMerge, Plus, ArrowRight, Zap } from 'lucide-react';
+import { GitBranch, GitMerge, Plus, ArrowRight, Zap, Settings, Download, FolderOpen, Upload } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -274,38 +274,39 @@ export const GitBranching: React.FC = () => {
         <div className="text-center mb-16 animate-fade-in">
           <Badge variant="outline" className="mb-4 px-4 py-2">
             <GitBranch className="w-4 h-4 mr-2" />
-            Interactive Branching & Merging
+            Interactive Git Learning
           </Badge>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            Visualize <span className="text-gradient-primary">Git Branches</span>
+            Master <span className="text-gradient-primary">Git Commands</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            See how branches and merges work with live 3D visualization
+            Learn Git concepts through interactive examples and detailed explanations
           </p>
         </div>
 
-        {/* Concept Explanation */}
+        {/* Git Topics Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {/* First Row */}
           {[
             {
-              id: "branching",
-              icon: GitBranch,
-              title: "Branching",
-              description: "Create parallel development paths for features or experiments",
+              id: "config",
+              icon: Settings,
+              title: "Git Config",
+              description: "Set up your Git identity and preferences",
               color: "electric-blue"
             },
             {
-              id: "merging",
-              icon: GitMerge,
-              title: "Merging",
-              description: "Combine changes from different branches back together",
+              id: "clone", 
+              icon: Download,
+              title: "Git Clone",
+              description: "Download repository from remote server",
               color: "neon-green"
             },
             {
-              id: "workflow",
-              icon: ArrowRight,
-              title: "Workflow",
-              description: "Organize team collaboration with feature branches",
+              id: "staging",
+              icon: Plus,
+              title: "Staging Area", 
+              description: "Prepared changes ready for commit",
               color: "warm-orange"
             }
           ].map((concept, idx) => {
@@ -313,24 +314,127 @@ export const GitBranching: React.FC = () => {
             return (
               <Card 
                 key={idx} 
-                className="card-glow group hover:scale-105 transition-transform cursor-pointer"
+                className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
                 onClick={() => handleTopicClick(concept.id)}
               >
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                    <Icon className={`w-8 h-8 text-${concept.color}`} />
+                <CardContent className="p-6 text-center h-full flex flex-col justify-between">
+                  <div>
+                    <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                      <Icon className={`w-8 h-8 text-${concept.color}`} />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                    <p className="text-muted-foreground text-sm">{concept.description}</p>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                  <p className="text-muted-foreground">{concept.description}</p>
-                  <div className="mt-4">
-                    <Badge variant="outline" className="text-xs">
-                      Click for details
-                    </Badge>
-                  </div>
+                  <Badge variant="outline" className="text-xs mt-4">
+                    Click for details
+                  </Badge>
                 </CardContent>
               </Card>
             );
           })}
+          
+          {/* Second Row */}
+          {[
+            {
+              id: "push",
+              icon: Upload,
+              title: "Git Push", 
+              description: "Upload local commits to remote repository",
+              color: "electric-blue"
+            },
+            {
+              id: "pull",
+              icon: Download,
+              title: "Git Pull",
+              description: "Download and merge remote changes",
+              color: "neon-green"
+            },
+            {
+              id: "stash",
+              icon: FolderOpen,
+              title: "Git Stash",
+              description: "Temporarily save changes without committing",
+              color: "warm-orange"
+            }
+          ].map((concept, idx) => {
+            const Icon = concept.icon;
+            return (
+              <Card 
+                key={idx + 3} 
+                className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
+                onClick={() => handleTopicClick(concept.id)}
+              >
+                <CardContent className="p-6 text-center h-full flex flex-col justify-between">
+                  <div>
+                    <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                      <Icon className={`w-8 h-8 text-${concept.color}`} />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                    <p className="text-muted-foreground text-sm">{concept.description}</p>
+                  </div>
+                  <Badge variant="outline" className="text-xs mt-4">
+                    Click for details
+                  </Badge>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Advanced Topics Section */}
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold mb-4">Advanced Git Concepts</h3>
+            <p className="text-muted-foreground">Master these concepts for efficient collaboration</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                id: "branching",
+                icon: GitBranch,
+                title: "Branching",
+                description: "Create parallel development paths for features or experiments",
+                color: "electric-blue"
+              },
+              {
+                id: "merging",
+                icon: GitMerge,
+                title: "Merging",
+                description: "Combine changes from different branches back together",
+                color: "neon-green"
+              },
+              {
+                id: "workflow",
+                icon: ArrowRight,
+                title: "Workflow",
+                description: "Organize team collaboration with feature branches",
+                color: "warm-orange"
+              }
+            ].map((concept, idx) => {
+              const Icon = concept.icon;
+              return (
+                <Card 
+                  key={idx} 
+                  className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
+                  onClick={() => handleTopicClick(concept.id)}
+                >
+                  <CardContent className="p-6 text-center h-full flex flex-col justify-between">
+                    <div>
+                      <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                        <Icon className={`w-8 h-8 text-${concept.color}`} />
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
+                      <p className="text-muted-foreground text-sm">{concept.description}</p>
+                    </div>
+                    <Badge variant="outline" className="text-xs mt-4">
+                      Click for details
+                    </Badge>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -339,7 +443,7 @@ export const GitBranching: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <GitBranch className="w-5 h-5" />
-                <span>3D Branch Visualization</span>
+                <span>Branch Visualization</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
