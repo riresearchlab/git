@@ -3,6 +3,7 @@ import { GitBranch, GitMerge, Plus, ArrowRight, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { GitTopicModal } from '@/components/GitTopicModal';
 
 interface Commit {
   id: string;
@@ -164,6 +165,13 @@ export const GitBranching: React.FC = () => {
   ]);
   const [currentBranch, setCurrentBranch] = useState('main');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+
+  const handleTopicClick = (topicId: string) => {
+    setSelectedTopic(topicId);
+    setModalOpen(true);
+  };
 
   const addCommand = (cmd: string, output: string) => {
     setCommandHistory(prev => [...prev, `$ ${cmd}`, output]);
@@ -280,18 +288,21 @@ export const GitBranching: React.FC = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {[
             {
+              id: "branching",
               icon: GitBranch,
               title: "Branching",
               description: "Create parallel development paths for features or experiments",
               color: "electric-blue"
             },
             {
+              id: "merging",
               icon: GitMerge,
               title: "Merging",
               description: "Combine changes from different branches back together",
               color: "neon-green"
             },
             {
+              id: "workflow",
               icon: ArrowRight,
               title: "Workflow",
               description: "Organize team collaboration with feature branches",
@@ -300,13 +311,22 @@ export const GitBranching: React.FC = () => {
           ].map((concept, idx) => {
             const Icon = concept.icon;
             return (
-              <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
+              <Card 
+                key={idx} 
+                className="card-glow group hover:scale-105 transition-transform cursor-pointer"
+                onClick={() => handleTopicClick(concept.id)}
+              >
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
                     <Icon className={`w-8 h-8 text-${concept.color}`} />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
                   <p className="text-muted-foreground">{concept.description}</p>
+                  <div className="mt-4">
+                    <Badge variant="outline" className="text-xs">
+                      Click for details
+                    </Badge>
+                  </div>
                 </CardContent>
               </Card>
             );
@@ -449,6 +469,13 @@ export const GitBranching: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Topic Detail Modal */}
+        <GitTopicModal 
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          topicId={selectedTopic}
+        />
       </div>
     </section>
   );
