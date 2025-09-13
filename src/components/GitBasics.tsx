@@ -180,17 +180,146 @@ export const GitBasics: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Interactive Terminal */}
-          <Card className="card-glow glow-blue h-fit">
+          {/* Left Column */}
+          <div className="space-y-8">
+            {/* Git State Visualization */}
+            <Card className="card-glow glow-green">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <GitBranch className="w-5 h-5" />
+                  <span>Git Repository State</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Git Configuration */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold flex items-center space-x-2">
+                      <Settings className="w-4 h-4" />
+                      <span>Git Configuration</span>
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
+                        <div className={`w-3 h-3 rounded-full ${gitState.userName ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                        <span className="text-sm">User: {gitState.userName || 'Not configured'}</span>
+                      </div>
+                      <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
+                        <div className={`w-3 h-3 rounded-full ${gitState.userEmail ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                        <span className="text-sm">Email: {gitState.userEmail || 'Not configured'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Repository Status */}
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                      <div className={`w-4 h-4 rounded-full ${gitState.cloned ? 'bg-blue-500' : 'bg-gray-400'}`}></div>
+                      <span className={gitState.cloned ? 'text-blue-400' : 'text-gray-400'}>
+                        Repository {gitState.cloned ? 'Cloned from GitHub' : 'Not cloned'}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                      <div className={`w-4 h-4 rounded-full ${gitState.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                      <span className={gitState.initialized ? 'text-green-400' : 'text-gray-400'}>
+                        Repository {gitState.initialized ? 'Initialized' : 'Not Initialized'}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
+                      <div className={`w-4 h-4 rounded-full ${gitState.remoteAdded ? 'bg-purple-500' : 'bg-gray-400'}`}></div>
+                      <span className={gitState.remoteAdded ? 'text-purple-400' : 'text-gray-400'}>
+                        Remote Origin {gitState.remoteAdded ? 'Added' : 'Not added'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Staging Area */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold flex items-center space-x-2">
+                      <Plus className="w-4 h-4" />
+                      <span>Staging Area</span>
+                    </h4>
+                    <div className="min-h-[60px] p-4 border-2 border-dashed border-accent rounded-lg">
+                      {gitState.staged.length > 0 ? (
+                        gitState.staged.map((file, idx) => (
+                          <Badge key={idx} variant="secondary" className="mr-2 mb-2">
+                            {file}
+                          </Badge>
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground text-center">No staged files</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Commit History */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold flex items-center space-x-2">
+                      <Save className="w-4 h-4" />
+                      <span>Commit History</span>
+                    </h4>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {gitState.committed.length > 0 ? (
+                        gitState.committed.map((commit, idx) => (
+                          <div key={idx} className="p-3 bg-primary/10 rounded-lg border-l-4 border-primary">
+                            <div className="font-mono text-sm text-primary">
+                              commit abc{Math.random().toString().slice(2, 8)}
+                            </div>
+                            <div className="text-sm">{commit.message}</div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Files: {commit.files.join(', ')}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground text-center p-4">No commits yet</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Git Commands */}
+            <Card className="card-glow glow-orange">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Terminal className="w-5 h-5" />
+                  <span>Git Commands</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {commands.map((command, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <Button
+                        onClick={() => executeCommand(command.cmd)}
+                        className="text-sm font-mono flex-1 justify-start"
+                        variant={idx <= currentStep ? "default" : "outline"}
+                      >
+                        {command.cmd}
+                      </Button>
+                    </div>
+                  ))}
+                  <Button onClick={resetDemo} variant="outline" className="w-full">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Reset Demo
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column - Interactive Terminal */}
+          <Card className="card-glow glow-blue">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Terminal className="w-5 h-5" />
                 <span>Interactive Terminal</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
               {/* Terminal Window */}
-              <div className="bg-black rounded-lg p-4 font-mono text-sm h-80">
+              <div className="bg-black rounded-lg p-4 font-mono text-sm h-[600px]">
                 <div className="flex items-center space-x-2 mb-3">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -198,7 +327,7 @@ export const GitBasics: React.FC = () => {
                   <span className="text-gray-400 ml-2">Terminal</span>
                 </div>
                 
-                <div className="text-green-400 space-y-1 h-60 overflow-y-auto">
+                <div className="text-green-400 space-y-1 h-[550px] overflow-y-auto">
                   {terminalHistory.map((line, idx) => (
                     <div key={idx} className={line.startsWith('admin@ubuntu:~$') ? 'text-green-400' : 'text-gray-300'}>
                       {line}
@@ -206,122 +335,6 @@ export const GitBasics: React.FC = () => {
                   ))}
                   <div className="text-green-400">
                     admin@ubuntu:~$ <span className="animate-pulse">_</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Command Buttons */}
-              <div className="space-y-2">
-                {commands.map((command, idx) => (
-                  <div key={idx} className="flex items-center space-x-2">
-                    <Button
-                      onClick={() => executeCommand(command.cmd)}
-                      className="text-sm font-mono flex-1 justify-start"
-                      variant={idx <= currentStep ? "default" : "outline"}
-                    >
-                      {command.cmd}
-                    </Button>
-                  </div>
-                ))}
-                <Button onClick={resetDemo} variant="outline" className="w-full">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Reset Demo
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Git State Visualization */}
-          <Card className="card-glow glow-green">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <GitBranch className="w-5 h-5" />
-                <span>Git Repository State</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {/* Git Configuration */}
-                <div className="space-y-2">
-                  <h4 className="font-semibold flex items-center space-x-2">
-                    <Settings className="w-4 h-4" />
-                    <span>Git Configuration</span>
-                  </h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
-                      <div className={`w-3 h-3 rounded-full ${gitState.userName ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                      <span className="text-sm">User: {gitState.userName || 'Not configured'}</span>
-                    </div>
-                    <div className="flex items-center space-x-4 p-3 rounded-lg bg-surface-elevated">
-                      <div className={`w-3 h-3 rounded-full ${gitState.userEmail ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                      <span className="text-sm">Email: {gitState.userEmail || 'Not configured'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Repository Status */}
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
-                    <div className={`w-4 h-4 rounded-full ${gitState.cloned ? 'bg-blue-500' : 'bg-gray-400'}`}></div>
-                    <span className={gitState.cloned ? 'text-blue-400' : 'text-gray-400'}>
-                      Repository {gitState.cloned ? 'Cloned from GitHub' : 'Not cloned'}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
-                    <div className={`w-4 h-4 rounded-full ${gitState.initialized ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                    <span className={gitState.initialized ? 'text-green-400' : 'text-gray-400'}>
-                      Repository {gitState.initialized ? 'Initialized' : 'Not Initialized'}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-4 p-4 rounded-lg bg-surface-elevated">
-                    <div className={`w-4 h-4 rounded-full ${gitState.remoteAdded ? 'bg-purple-500' : 'bg-gray-400'}`}></div>
-                    <span className={gitState.remoteAdded ? 'text-purple-400' : 'text-gray-400'}>
-                      Remote Origin {gitState.remoteAdded ? 'Added' : 'Not added'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Staging Area */}
-                <div className="space-y-2">
-                  <h4 className="font-semibold flex items-center space-x-2">
-                    <Plus className="w-4 h-4" />
-                    <span>Staging Area</span>
-                  </h4>
-                  <div className="min-h-[60px] p-4 border-2 border-dashed border-accent rounded-lg">
-                    {gitState.staged.length > 0 ? (
-                      gitState.staged.map((file, idx) => (
-                        <Badge key={idx} variant="secondary" className="mr-2 mb-2">
-                          {file}
-                        </Badge>
-                      ))
-                    ) : (
-                      <p className="text-muted-foreground text-center">No staged files</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Commit History */}
-                <div className="space-y-2">
-                  <h4 className="font-semibold flex items-center space-x-2">
-                    <Save className="w-4 h-4" />
-                    <span>Commit History</span>
-                  </h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {gitState.committed.length > 0 ? (
-                      gitState.committed.map((commit, idx) => (
-                        <div key={idx} className="p-3 bg-primary/10 rounded-lg border-l-4 border-primary">
-                          <div className="font-mono text-sm text-primary">
-                            commit abc{Math.random().toString().slice(2, 8)}
-                          </div>
-                          <div className="text-sm">{commit.message}</div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Files: {commit.files.join(', ')}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-muted-foreground text-center p-4">No commits yet</p>
-                    )}
                   </div>
                 </div>
               </div>
