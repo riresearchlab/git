@@ -31,7 +31,7 @@ export const GitBasics: React.FC = () => {
   ];
 
   const executeCommand = (command: string) => {
-    setTerminalHistory(prev => [...prev, `$ ${command}`]);
+    setTerminalHistory(prev => [...prev, `admin@ubuntu:~$ ${command}`]);
     
     switch (command) {
       case 'git config --global user.name "Your Name"':
@@ -190,22 +190,22 @@ export const GitBasics: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Terminal Window */}
-              <div className="bg-black rounded-lg p-4 font-mono text-sm">
-                <div className="flex items-center space-x-2 mb-4">
+              <div className="bg-black rounded-lg p-4 font-mono text-sm h-80">
+                <div className="flex items-center space-x-2 mb-3">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span className="text-gray-400 ml-2">Terminal</span>
                 </div>
                 
-                <div className="text-green-400 space-y-1 max-h-64 overflow-y-auto">
+                <div className="text-green-400 space-y-1 h-60 overflow-y-auto">
                   {terminalHistory.map((line, idx) => (
-                    <div key={idx} className={line.startsWith('$') ? 'text-white' : 'text-gray-300'}>
+                    <div key={idx} className={line.startsWith('admin@ubuntu:~$') ? 'text-green-400' : 'text-gray-300'}>
                       {line}
                     </div>
                   ))}
-                  <div className="text-white">
-                    $ <span className="animate-pulse">_</span>
+                  <div className="text-green-400">
+                    admin@ubuntu:~$ <span className="animate-pulse">_</span>
                   </div>
                 </div>
               </div>

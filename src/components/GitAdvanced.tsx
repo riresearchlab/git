@@ -39,7 +39,7 @@ export const GitAdvanced: React.FC = () => {
   const [hasUnpulledChanges, setHasUnpulledChanges] = useState(true);
 
   const addOutput = (command: string, output: string) => {
-    setTerminalOutput(prev => [...prev, `$ ${command}`, output]);
+    setTerminalOutput(prev => [...prev, `admin@ubuntu:~$ ${command}`, output]);
   };
 
   const performRebase = (targetCommit: string) => {
@@ -237,19 +237,20 @@ export const GitAdvanced: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-black rounded-lg p-4 font-mono text-sm max-h-64 overflow-y-auto">
-                <div className="flex items-center space-x-2 mb-2">
+              <div className="bg-black rounded-lg p-4 font-mono text-sm h-64 overflow-y-auto">
+                <div className="flex items-center space-x-2 mb-3">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-gray-400 ml-2">Terminal</span>
                 </div>
                 {terminalOutput.map((line, idx) => (
-                  <div key={idx} className={line.startsWith('$') ? 'text-green-400' : 'text-gray-300'}>
+                  <div key={idx} className={line.startsWith('admin@ubuntu:~$') ? 'text-green-400' : 'text-gray-300'}>
                     {line}
                   </div>
                 ))}
                 <div className="text-green-400">
-                  $ <span className="animate-pulse">_</span>
+                  admin@ubuntu:~$ <span className="animate-pulse">_</span>
                 </div>
               </div>
               <Button onClick={resetDemo} variant="outline" className="w-full mt-4">
