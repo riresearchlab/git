@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Settings, Download, FileText, Terminal, RefreshCw } from 'lucide-react';
+import { Settings, Download, FileText, TerminalIcon, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Terminal } from '@/components/ui/terminal';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitSetupCloning: React.FC = () => {
@@ -70,6 +71,10 @@ export const GitSetupCloning: React.FC = () => {
       userEmail: '',
       repoUrl: ''
     });
+  };
+
+  const clearTerminal = () => {
+    setTerminalHistory([]);
   };
 
   return (
@@ -223,34 +228,17 @@ export const GitSetupCloning: React.FC = () => {
           <Card className="card-glow glow-green">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Terminal className="w-5 h-5" />
+                <TerminalIcon className="w-5 h-5" />
                 <span>Interactive Terminal</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Terminal Window */}
-              <div className="bg-black rounded-lg p-4 font-mono text-sm h-96">
-                <div className="flex items-center space-x-2 mb-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-400 ml-2">Terminal</span>
-                </div>
-                
-                <div className="text-green-400 space-y-1 h-80 overflow-y-auto">
-                  <div className="text-gray-300">Welcome to Git Setup Tutorial</div>
-                  <div className="text-gray-300">Follow the steps to configure Git and clone your first repository</div>
-                  <div className="text-gray-300">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  {terminalHistory.map((line, idx) => (
-                    <div key={idx} className={line.startsWith('$') ? 'text-green-400' : 'text-gray-300'}>
-                      {line}
-                    </div>
-                  ))}
-                  <div className="text-green-400">
-                    $ <span className="animate-pulse">_</span>
-                  </div>
-                </div>
-              </div>
+              <Terminal
+                title="Git Setup & Cloning Demo"
+                output={terminalHistory}
+                onClear={clearTerminal}
+                height="h-96"
+              />
             </CardContent>
           </Card>
         </div>

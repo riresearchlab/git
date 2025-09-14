@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Download, Upload, GitBranch, Globe, RefreshCw, Terminal } from 'lucide-react';
+import { Download, Upload, GitBranch, Globe, RefreshCw, TerminalIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Terminal } from '@/components/ui/terminal';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitSynchronizing: React.FC = () => {
@@ -88,6 +89,10 @@ To https://github.com/user/repo
     setBranches(['main', 'develop', 'feature/auth']);
   };
 
+  const clearTerminal = () => {
+    setTerminalOutput([]);
+  };
+
   return (
     <section id="git-synchronizing" className="py-20 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -168,7 +173,7 @@ To https://github.com/user/repo
                   <Card className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="font-medium flex items-center space-x-2">
-                        <Terminal className="w-4 h-4" />
+                        <TerminalIcon className="w-4 h-4" />
                         <span>Local Repository</span>
                       </h5>
                       <Badge variant={hasUnpushedChanges ? "destructive" : "secondary"}>
@@ -275,33 +280,17 @@ To https://github.com/user/repo
           <Card className="card-glow glow-green">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Terminal className="w-5 h-5" />
+                <TerminalIcon className="w-5 h-5" />
                 <span>Command Output</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-black rounded-lg p-4 font-mono text-sm h-96 overflow-y-auto">
-                <div className="flex items-center space-x-2 mb-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-400 ml-2">Terminal</span>
-                </div>
-                
-                <div className="space-y-1">
-                  <div className="text-gray-300">Git Synchronization Demo</div>
-                  <div className="text-gray-300">Practice pushing, pulling, and branch operations</div>
-                  <div className="text-gray-300">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                  {terminalOutput.map((line, idx) => (
-                    <div key={idx} className={line.startsWith('$') ? 'text-green-400' : 'text-gray-300'}>
-                      {line}
-                    </div>
-                  ))}
-                  <div className="text-green-400">
-                    $ <span className="animate-pulse">_</span>
-                  </div>
-                </div>
-              </div>
+              <Terminal
+                title="Git Synchronization Demo"
+                output={terminalOutput}
+                onClear={clearTerminal}
+                height="h-96"
+              />
               
               <Button onClick={resetDemo} variant="outline" className="w-full mt-4">
                 Reset Demo

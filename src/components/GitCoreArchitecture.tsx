@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Terminal, Plus, Cloud, Settings, RefreshCw } from 'lucide-react';
+import { Terminal as TerminalIcon, Plus, Cloud, Settings, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Terminal } from '@/components/ui/terminal';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitCoreArchitecture: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
   const [gitState, setGitState] = useState({
     workingFiles: ['index.html', 'style.css', 'script.js'],
     stagedFiles: [] as string[],
@@ -30,6 +32,7 @@ export const GitCoreArchitecture: React.FC = () => {
       workingFiles: prev.workingFiles.filter(f => f !== file),
       stagedFiles: [...prev.stagedFiles, file]
     }));
+    setTerminalHistory(prev => [...prev, `$ git add ${file}`, `Staged '${file}' for commit`]);
   };
 
   const unstageFile = (file: string) => {
@@ -38,10 +41,12 @@ export const GitCoreArchitecture: React.FC = () => {
       stagedFiles: prev.stagedFiles.filter(f => f !== file),
       workingFiles: [...prev.workingFiles, file]
     }));
+    setTerminalHistory(prev => [...prev, `$ git reset HEAD ${file}`, `Unstaged '${file}' from staging area`]);
   };
 
   const connectRemote = () => {
     setGitState(prev => ({ ...prev, remoteConnected: true }));
+    setTerminalHistory(prev => [...prev, '$ git remote add origin https://github.com/user/repo.git', 'Remote origin added successfully']);
   };
 
   const resetDemo = () => {
@@ -50,6 +55,11 @@ export const GitCoreArchitecture: React.FC = () => {
       stagedFiles: [],
       remoteConnected: false
     });
+    setTerminalHistory([]);
+  };
+
+  const clearTerminal = () => {
+    setTerminalHistory([]);
   };
 
   return (
@@ -72,7 +82,7 @@ export const GitCoreArchitecture: React.FC = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {[
             {
-              icon: Terminal,
+              icon: TerminalIcon,
               title: "Working Directory",
               description: "Your project files where you make changes",
               color: "warm-orange",
@@ -131,7 +141,7 @@ export const GitCoreArchitecture: React.FC = () => {
                 {/* Working Directory */}
                 <div className="p-4 border-2 border-orange-500 rounded-lg bg-orange-500/10">
                   <h4 className="font-semibold text-orange-400 mb-3 flex items-center">
-                    <Terminal className="w-4 h-4 mr-2" />
+                    <TerminalIcon className="w-4 h-4 mr-2" />
                     Working Directory
                   </h4>
                   <div className="space-y-2">
@@ -196,50 +206,53 @@ export const GitCoreArchitecture: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <RefreshCw className="w-5 h-5" />
-                <span>Data Flow</span>
+                <span>Interactive Terminal</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-8">
-                <div className="text-center">
+              <div className="space-y-6">
+                <Terminal
+                  title="Git Core Architecture Demo"
+                  output={terminalHistory}
+                  onClear={clearTerminal}
+                  height="h-64"
+                />
+                
+                <div className="text-center space-y-4">
                   <div className="w-20 h-20 rounded-xl bg-orange-500/20 border-2 border-orange-500 mx-auto mb-4 flex items-center justify-center">
-                    <Terminal className="w-8 h-8 text-orange-400" />
+                    <TerminalIcon className="w-8 h-8 text-orange-400" />
                   </div>
                   <h4 className="font-semibold text-orange-400">Working Directory</h4>
                   <p className="text-sm text-muted-foreground">Edit files here</p>
-                </div>
 
-                <div className="flex justify-center">
-                  <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
-                    git add →
+                  <div className="flex justify-center">
+                    <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                      git add →
+                    </div>
                   </div>
-                </div>
 
-                <div className="text-center">
                   <div className="w-20 h-20 rounded-xl bg-blue-500/20 border-2 border-blue-500 mx-auto mb-4 flex items-center justify-center">
                     <Plus className="w-8 h-8 text-blue-400" />
                   </div>
                   <h4 className="font-semibold text-blue-400">Staging Area</h4>
                   <p className="text-sm text-muted-foreground">Review changes</p>
-                </div>
 
-                <div className="flex justify-center">
-                  <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
-                    git commit →
+                  <div className="flex justify-center">
+                    <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                      git commit →
+                    </div>
                   </div>
-                </div>
 
-                <div className="text-center">
                   <div className="w-20 h-20 rounded-xl bg-green-500/20 border-2 border-green-500 mx-auto mb-4 flex items-center justify-center">
                     <Cloud className="w-8 h-8 text-green-400" />
                   </div>
                   <h4 className="font-semibold text-green-400">Repository</h4>
                   <p className="text-sm text-muted-foreground">Permanent storage</p>
-                </div>
 
-                <Button onClick={resetDemo} variant="outline" className="w-full mt-6">
-                  Reset Demo
-                </Button>
+                  <Button onClick={resetDemo} variant="outline" className="w-full mt-6">
+                    Reset Demo
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Code, Terminal, FileText, GitBranch, GitMerge, ArrowRight, Settings, Download, FolderOpen, Plus, Upload, RefreshCw, RotateCcw, Cherry, Archive, Cloud } from 'lucide-react';
+import { Code, Terminal, FileText, GitBranch, GitMerge, ArrowRight, Settings, Download, FolderOpen, Plus, Upload, RefreshCw, RotateCcw, Cherry, Archive, Cloud, Tag } from 'lucide-react';
 
 interface GitTopicData {
   id: string;
@@ -977,6 +977,111 @@ git flow release start v1.2.0`,
       'Use pull/merge requests for code review',
       'Automate testing and deployment where possible',
       'Document your workflow for new team members'
+    ]
+  },
+  'git-tag': {
+    id: 'git-tag',
+    title: 'Git Tag',
+    icon: Tag,
+    description: 'Mark specific commits with version labels and releases. Tags are used to mark important points in your repository history, typically for releases and version milestones.',
+    color: 'electric-blue',
+    keyCommands: [
+      {
+        command: 'git tag <tag-name>',
+        description: 'Create a lightweight tag at current commit',
+        example: 'git tag v1.0.0',
+        output: 'Tag v1.0.0 created'
+      },
+      {
+        command: 'git tag -a <tag-name> -m "message"',
+        description: 'Create an annotated tag with message',
+        example: 'git tag -a v1.0.0 -m "First stable release"',
+        output: 'Annotated tag v1.0.0 created'
+      },
+      {
+        command: 'git tag',
+        description: 'List all tags in repository',
+        example: 'git tag',
+        output: 'v1.0.0\nv1.1.0\nv2.0.0'
+      },
+      {
+        command: 'git push origin --tags',
+        description: 'Push all tags to remote repository',
+        example: 'git push origin --tags',
+        output: 'Tags pushed to remote successfully'
+      },
+      {
+        command: 'git tag -d <tag-name>',
+        description: 'Delete a tag locally',
+        example: 'git tag -d v1.0.0',
+        output: 'Deleted tag v1.0.0'
+      }
+    ],
+    examples: [
+      {
+        title: 'Release Tagging',
+        description: 'Tag a release version with semantic versioning',
+        code: `# Create annotated tag for release
+git tag -a v1.2.0 -m "Release version 1.2.0 - New features and bug fixes"
+
+# Push tag to remote
+git push origin v1.2.0
+
+# Or push all tags
+git push origin --tags
+
+# View tag information
+git show v1.2.0`,
+        output: 'Release v1.2.0 tagged and pushed successfully'
+      },
+      {
+        title: 'Hotfix Tagging',
+        description: 'Tag hotfix releases for tracking',
+        code: `# Tag hotfix release
+git tag -a v1.1.1 -m "Hotfix: Critical security patch"
+
+# List tags with pattern
+git tag -l "v1.1.*"
+
+# Push hotfix tag
+git push origin v1.1.1`,
+        output: 'Hotfix v1.1.1 tagged and available'
+      },
+      {
+        title: 'Tag Management',
+        description: 'Manage and organize repository tags',
+        code: `# List all tags
+git tag
+
+# List tags with pattern matching
+git tag -l "v2.*"
+
+# Show tag details
+git show v2.0.0
+
+# Delete local tag
+git tag -d v1.0.0-beta
+
+# Delete remote tag
+git push origin --delete v1.0.0-beta`,
+        output: 'Tags managed and organized successfully'
+      }
+    ],
+    useCases: [
+      'Marking release versions and milestones',
+      'Creating stable reference points in history',
+      'Facilitating deployment and rollback processes',
+      'Organizing software versions and changelogs',
+      'Enabling semantic versioning workflows',
+      'Marking important commits for future reference'
+    ],
+    tips: [
+      'Use semantic versioning (v1.0.0, v1.1.0, v2.0.0) for consistency',
+      'Prefer annotated tags (-a flag) for releases as they store more metadata',
+      'Push tags separately with git push origin --tags or git push origin <tag-name>',
+      'Use lightweight tags for temporary or local reference points',
+      'Include meaningful messages with annotated tags to describe the release',
+      'Regularly clean up old or unnecessary tags to keep repository organized'
     ]
   }
 };

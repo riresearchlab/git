@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { GitMerge, RotateCcw, ArrowRight, GitBranch, Terminal, RefreshCw } from 'lucide-react';
+import { GitMerge, RotateCcw, Tag, GitBranch, TerminalIcon, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Terminal } from '@/components/ui/terminal';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 interface Commit {
@@ -24,6 +25,7 @@ export const GitIntegratingChanges: React.FC = () => {
   const [rebaseResult, setRebaseResult] = useState<Commit[]>([]);
   const [mergeResult, setMergeResult] = useState<Commit[]>([]);
   const [terminalOutput, setTerminalOutput] = useState<string[]>([]);
+  const [tags, setTags] = useState<Array<{id: string, name: string, commit: string, message: string}>>([]);
   const [currentBranch, setCurrentBranch] = useState('main');
   const [availableBranches] = useState(['main', 'feature', 'develop']);
 
@@ -80,23 +82,55 @@ export const GitIntegratingChanges: React.FC = () => {
     );
   };
 
-  const demonstrateWorkflow = () => {
+  const demonstrateTagging = () => {
     addOutput(
-      'git checkout -b feature/new-component',
-      "Switched to a new branch 'feature/new-component'"
+      'git tag v1.0.0',
+      "Tag 'v1.0.0' created for commit abc1234"
     );
     setTimeout(() => {
       addOutput(
-        'git add . && git commit -m "Add new component"',
-        '[feature/new-component abc1234] Add new component\n 3 files changed, 45 insertions(+)'
+        'git tag -a v1.1.0 -m "Feature release"',
+        "Tag 'v1.1.0' created with annotation"
       );
     }, 1000);
     setTimeout(() => {
       addOutput(
-        'git checkout main && git merge feature/new-component',
-        'Updating def5678..abc1234\nFast-forward\n src/Component.js | 45 +++++++++++++++++++++++++++++++++++++++++++++\n 1 file changed, 45 insertions(+)'
+        'git push origin --tags',
+        'Enumerating objects: 2, done.\nTo https://github.com/user/repo\n * [new tag]         v1.0.0 -> v1.0.0\n * [new tag]         v1.1.0 -> v1.1.0'
       );
     }, 2000);
+  };
+
+  const createTag = (tagName: string, message?: string) => {
+    const latestCommit = commits[commits.length - 1];
+    const newTag = {
+      id: `tag-${Date.now()}`,
+      name: tagName,
+      commit: latestCommit?.hash || 'abc1234',
+      message: message || `Release ${tagName}`
+    };
+    
+    setTags(prev => [...prev, newTag]);
+    addOutput(
+      `git tag ${message ? `-a ${tagName} -m "${message}"` : tagName}`,
+      `Tag '${tagName}' created for commit ${latestCommit?.hash || 'abc1234'}`
+    );
+  };
+
+  const pushTags = () => {
+    const tagOutput = tags.map(tag => ` * [new tag]         ${tag.name} -> ${tag.name}`).join('\n');
+    addOutput(
+      'git push origin --tags',
+      `Enumerating objects: ${tags.length}, done.\nCounting objects: 100% (${tags.length}/${tags.length}), done.\nTo https://github.com/user/repo\n${tagOutput}`
+    );
+  };
+
+  const listTags = () => {
+    if (tags.length === 0) {
+      addOutput('git tag', 'No tags found');
+    } else {
+      addOutput('git tag', tags.map(tag => tag.name).join('\n'));
+    }
   };
 
   const resetDemo = () => {
@@ -110,6 +144,11 @@ export const GitIntegratingChanges: React.FC = () => {
     setMergeResult([]);
     setTerminalOutput([]);
     setCurrentBranch('main');
+    setTags([]);
+  };
+
+  const clearTerminal = () => {
+    setTerminalOutput([]);
   };
 
   return (
@@ -146,11 +185,11 @@ export const GitIntegratingChanges: React.FC = () => {
               topicId: "rebase"
             },
             {
-              icon: ArrowRight,
-              title: "Workflow",
-              description: "Organize team collaboration with structured strategies",
+              icon: Tag,
+              title: "Git Tag",
+              description: "Mark specific commits with version labels and releases",
               color: "electric-blue",
-              topicId: "workflow"
+              topicId: "git-tag"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;
@@ -224,12 +263,12 @@ export const GitIntegratingChanges: React.FC = () => {
                       Rebase feature onto main
                     </Button>
                     <Button
-                      onClick={demonstrateWorkflow}
+                      onClick={demonstrateTagging}
                       className="w-full justify-start"
                       variant="secondary"
                     >
-                      <ArrowRight className="w-4 h-4 mr-2" />
-                      Demo Feature Workflow
+                      <Tag className="w-4 h-4 mr-2" />
+                      Demo Git Tagging
                     </Button>
                   </div>
                 </div>
@@ -270,67 +309,78 @@ export const GitIntegratingChanges: React.FC = () => {
           <Card className="card-glow glow-green">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Terminal className="w-5 h-5" />
+                <TerminalIcon className="w-5 h-5" />
                 <span>Integration Commands</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {/* Terminal Output */}
-                <div className="bg-black rounded-lg p-4 font-mono text-sm h-64 overflow-y-auto">
-                  <div className="flex items-center space-x-2 mb-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-400 ml-2">Terminal</span>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <div className="text-gray-300">Git Integration Demo</div>
-                    <div className="text-gray-300">Practice merging, rebasing, and workflow operations</div>
-                    <div className="text-gray-300">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-                    {terminalOutput.map((line, idx) => (
-                      <div key={idx} className={line.startsWith('$') ? 'text-green-400' : 'text-gray-300'}>
-                        {line}
-                      </div>
-                    ))}
-                    <div className="text-green-400">
-                      $ <span className="animate-pulse">_</span>
-                    </div>
-                  </div>
-                </div>
+                <Terminal
+                  title="Git Integration Demo"
+                  output={terminalOutput}
+                  onClear={clearTerminal}
+                  height="h-64"
+                />
 
-                {/* Branch Management */}
+                {/* Tag Management */}
                 <div className="space-y-4">
-                  <h4 className="font-semibold">Current Context</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Current Branch:</span>
-                      <Badge variant="secondary">{currentBranch}</Badge>
+                  <h4 className="font-semibold">Tag Management</h4>
+                  <div className="space-y-3">
+                    <div className="grid gap-2">
+                      <Button
+                        onClick={() => createTag('v1.0.0', 'First stable release')}
+                        className="w-full justify-start"
+                      >
+                        <Tag className="w-4 h-4 mr-2" />
+                        Create Tag v1.0.0
+                      </Button>
+                      <Button
+                        onClick={() => createTag('v1.1.0', 'Feature update')}
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <Tag className="w-4 h-4 mr-2" />
+                        Create Tag v1.1.0
+                      </Button>
+                      <Button
+                        onClick={listTags}
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        List All Tags
+                      </Button>
+                      <Button
+                        onClick={pushTags}
+                        className="w-full justify-start"
+                        variant="outline"
+                        disabled={tags.length === 0}
+                      >
+                        Push Tags to Remote
+                      </Button>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {availableBranches.map(branch => (
-                        <Button
-                          key={branch}
-                          size="sm"
-                          variant={currentBranch === branch ? "default" : "outline"}
-                          onClick={() => setCurrentBranch(branch)}
-                        >
-                          {branch}
-                        </Button>
-                      ))}
-                    </div>
+                    
+                    {tags.length > 0 && (
+                      <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded">
+                        <h5 className="font-medium mb-2 text-blue-400">Created Tags:</h5>
+                        {tags.map((tag) => (
+                          <div key={tag.id} className="text-sm text-blue-300 mb-1">
+                            {tag.name} → {tag.commit} ({tag.message})
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Best Practices */}
                 <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                  <h5 className="font-medium mb-2">Integration Best Practices</h5>
+                  <h5 className="font-medium mb-2">Git Tag Best Practices</h5>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Use merge for preserving branch history</li>
-                    <li>• Use rebase for clean linear history</li>
-                    <li>• Always test after integration</li>
-                    <li>• Follow team workflow conventions</li>
+                    <li>• Use semantic versioning (v1.0.0, v1.1.0, v2.0.0)</li>
+                    <li>• Tag stable releases and important milestones</li>
+                    <li>• Use annotated tags for releases (-a flag)</li>
+                    <li>• Push tags separately with --tags flag</li>
                   </ul>
                 </div>
 
