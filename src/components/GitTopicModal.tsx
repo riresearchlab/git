@@ -497,83 +497,6 @@ git commit -m "Resolve merge conflicts"`,
       'Consider using rebase for cleaner history in some cases'
     ]
   },
-  workflow: {
-    id: 'workflow',
-    title: 'Git Workflow',
-    icon: ArrowRight,
-    description: 'Organize team collaboration with structured branching strategies. Workflows define how teams use branches to coordinate development and releases.',
-    color: 'warm-orange',
-    keyCommands: [
-      {
-        command: 'git flow init',
-        description: 'Initialize Git Flow in repository',
-        example: 'git flow init',
-        output: 'Git Flow initialized'
-      },
-      {
-        command: 'git flow feature start <name>',
-        description: 'Start a new feature branch',
-        example: 'git flow feature start user-dashboard',
-        output: 'Feature branch created and switched to'
-      },
-      {
-        command: 'git flow feature finish <name>',
-        description: 'Finish and merge feature branch',
-        example: 'git flow feature finish user-dashboard',
-        output: 'Feature merged and branch deleted'
-      }
-    ],
-    examples: [
-      {
-        title: 'GitHub Flow',
-        description: 'Simple workflow with main branch and feature branches',
-        code: `# Create feature branch
-git checkout -b feature/new-api
-
-# Work and commit changes
-git add .
-git commit -m "Implement new API endpoint"
-
-# Push and create pull request
-git push origin feature/new-api
-
-# After review, merge via GitHub
-# Delete feature branch`,
-        output: 'Pull request merged successfully'
-      },
-      {
-        title: 'Git Flow',
-        description: 'Structured workflow with develop, feature, release, and hotfix branches',
-        code: `# Start new feature
-git flow feature start user-profile
-
-# Develop feature
-git add .
-git commit -m "Add user profile component"
-
-# Finish feature (merges to develop)
-git flow feature finish user-profile
-
-# Create release branch
-git flow release start v1.2.0`,
-        output: 'Release branch created for v1.2.0'
-      }
-    ],
-    useCases: [
-      'Coordinating work across multiple developers',
-      'Managing releases and hotfixes systematically',
-      'Ensuring code quality through reviews',
-      'Maintaining stable main/production branch',
-      'Organizing features for upcoming releases'
-    ],
-    tips: [
-      'Choose workflow that fits your team size and release cycle',
-      'Establish clear naming conventions for branches',
-      'Use pull/merge requests for code review',
-      'Automate testing and deployment where possible',
-      'Document your workflow for new team members'
-    ]
-  },
   'working-directory': {
     id: 'working-directory',
     title: 'Working Directory',
@@ -879,6 +802,104 @@ git reset HEAD`,
       '--soft keeps changes staged, --mixed unstages them, --hard discards them',
       'Be very careful with --hard as it permanently deletes changes',
       'Use git reflog to recover if you reset too far'
+    ]
+  },
+  'git-log': {
+    id: 'git-log',
+    title: 'Git Log',
+    icon: FileText,
+    description: 'View commit history and track changes. Git log shows the chronological history of commits, helping you understand project evolution and track changes over time.',
+    color: 'warm-orange',
+    keyCommands: [
+      {
+        command: 'git log',
+        description: 'Display commit history',
+        example: 'git log',
+        output: 'commit abc1234567890...\nAuthor: John Doe <john@example.com>\nDate: Mon Jan 15 10:30:45 2024 +0000\n\n    Add user authentication feature'
+      },
+      {
+        command: 'git log --oneline',
+        description: 'Show condensed commit history',
+        example: 'git log --oneline',
+        output: 'abc1234 Add user authentication feature\ndef5678 Fix login bug\nghi9012 Update README'
+      },
+      {
+        command: 'git log --graph',
+        description: 'Display commit history as a graph',
+        example: 'git log --graph --oneline',
+        output: '* abc1234 Add user authentication\n* def5678 Fix login bug\n* ghi9012 Update README'
+      },
+      {
+        command: 'git log -p',
+        description: 'Show changes introduced in each commit',
+        example: 'git log -p -2',
+        output: 'Shows last 2 commits with their diff patches'
+      }
+    ],
+    examples: [
+      {
+        title: 'Basic Commit History',
+        description: 'View the history of your project',
+        code: `# View full commit history
+git log
+
+# View last 5 commits
+git log -5
+
+# View commits in one line each
+git log --oneline
+
+# View commits with graph visualization
+git log --graph --oneline --all`,
+        output: 'Commit history displayed with various formatting options'
+      },
+      {
+        title: 'Filtered Log History',
+        description: 'Find specific commits using filters',
+        code: `# View commits by specific author
+git log --author="John Doe"
+
+# View commits in date range
+git log --since="2024-01-01" --until="2024-01-31"
+
+# View commits that modified specific file
+git log -- src/components/Header.js
+
+# Search commits by message content
+git log --grep="bug fix"`,
+        output: 'Filtered commit history based on specified criteria'
+      },
+      {
+        title: 'Advanced Log Formatting',
+        description: 'Customize log output format',
+        code: `# Custom format showing hash, date, and message
+git log --pretty=format:"%h - %ad - %s" --date=short
+
+# Show commit statistics
+git log --stat
+
+# Show commits with changed files
+git log --name-only
+
+# Show commits between branches
+git log main..feature-branch`,
+        output: 'Customized log output with specific formatting and information'
+      }
+    ],
+    useCases: [
+      'Reviewing project history and evolution',
+      'Finding when specific changes were introduced',
+      'Tracking contributions by different team members',
+      'Debugging by examining recent changes',
+      'Creating release notes from commit messages',
+      'Understanding code evolution over time'
+    ],
+    tips: [
+      'Use --oneline for quick overview of recent commits',
+      'Combine --graph --oneline --all to visualize branch structure',
+      'Use --since and --until to filter commits by date range',
+      'Search commit messages with --grep for specific keywords',
+      'Use -- <filename> to see commits that modified specific files'
     ]
   },
   workflow: {

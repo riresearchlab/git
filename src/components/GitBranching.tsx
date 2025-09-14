@@ -284,111 +284,10 @@ export const GitBranching: React.FC = () => {
           </p>
         </div>
 
-        {/* Git Topics Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {/* First Row */}
-          {[
-            {
-              id: "config",
-              icon: Settings,
-              title: "Git Config",
-              description: "Set up your Git identity and preferences",
-              color: "electric-blue"
-            },
-            {
-              id: "clone", 
-              icon: Download,
-              title: "Git Clone",
-              description: "Download repository from remote server",
-              color: "neon-green"
-            },
-            {
-              id: "staging",
-              icon: Plus,
-              title: "Staging Area", 
-              description: "Prepared changes ready for commit",
-              color: "warm-orange"
-            }
-          ].map((concept, idx) => {
-            const Icon = concept.icon;
-            return (
-              <Card 
-                key={idx} 
-                className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
-                onClick={() => handleTopicClick(concept.id)}
-              >
-                <CardContent className="p-6 text-center h-full flex flex-col justify-between">
-                  <div>
-                    <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                      <Icon className={`w-8 h-8 text-${concept.color}`} />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                    <p className="text-muted-foreground text-sm">{concept.description}</p>
-                  </div>
-                  <Badge variant="outline" className="text-xs mt-4">
-                    Click for details
-                  </Badge>
-                </CardContent>
-              </Card>
-            );
-          })}
-          
-          {/* Second Row */}
-          {[
-            {
-              id: "push",
-              icon: Upload,
-              title: "Git Push", 
-              description: "Upload local commits to remote repository",
-              color: "electric-blue"
-            },
-            {
-              id: "pull",
-              icon: Download,
-              title: "Git Pull",
-              description: "Download and merge remote changes",
-              color: "neon-green"
-            },
-            {
-              id: "stash",
-              icon: FolderOpen,
-              title: "Git Stash",
-              description: "Temporarily save changes without committing",
-              color: "warm-orange"
-            }
-          ].map((concept, idx) => {
-            const Icon = concept.icon;
-            return (
-              <Card 
-                key={idx + 3} 
-                className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
-                onClick={() => handleTopicClick(concept.id)}
-              >
-                <CardContent className="p-6 text-center h-full flex flex-col justify-between">
-                  <div>
-                    <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                      <Icon className={`w-8 h-8 text-${concept.color}`} />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                    <p className="text-muted-foreground text-sm">{concept.description}</p>
-                  </div>
-                  <Badge variant="outline" className="text-xs mt-4">
-                    Click for details
-                  </Badge>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
+      
         {/* Advanced Topics Section */}
         <div className="mb-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold mb-4">Advanced Git Concepts</h3>
-            <p className="text-muted-foreground">Master these concepts for efficient collaboration</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 id: "branching",
@@ -416,20 +315,22 @@ export const GitBranching: React.FC = () => {
               return (
                 <Card 
                   key={idx} 
-                  className="card-glow group hover:scale-105 transition-transform cursor-pointer h-48"
-                  onClick={() => handleTopicClick(concept.id)}
+                  className="card-glow group hover:scale-105 transition-transform"
                 >
-                  <CardContent className="p-6 text-center h-full flex flex-col justify-between">
-                    <div>
-                      <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
-                        <Icon className={`w-8 h-8 text-${concept.color}`} />
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                      <p className="text-muted-foreground text-sm">{concept.description}</p>
+                  <CardContent className="p-8 text-center">
+                    <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-6 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                      <Icon className={`w-8 h-8 text-${concept.color}`} />
                     </div>
-                    <Badge variant="outline" className="text-xs mt-4">
-                      Click for details
-                    </Badge>
+                    <h3 className="text-xl font-bold mb-3">{concept.title}</h3>
+                    <p className="text-base text-muted-foreground mb-6">{concept.description}</p>
+                    <Button 
+                      variant="outline" 
+                      size="default" 
+                      className="w-full"
+                      onClick={() => handleTopicClick(concept.id)}
+                    >
+                      Learn More
+                    </Button>
                   </CardContent>
                 </Card>
               );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cloud } from 'lucide-react';
+import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cloud, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -144,7 +144,7 @@ export const GitBasics: React.FC = () => {
         </div>
 
         {/* Concept Cards */}
-        <div className="grid md:grid-cols-5 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
           {[
             {
               icon: Settings,
@@ -180,20 +180,27 @@ export const GitBasics: React.FC = () => {
               description: "External repository for collaboration",
               color: "neon-green",
               topicId: "remote-repository"
+            },
+            {
+              icon: FileText,
+              title: "Git Log",
+              description: "View commit history and track changes",
+              color: "warm-orange",
+              topicId: "git-log"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;
             return (
               <Card key={idx} className="card-glow group hover:scale-105 transition-transform">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-4 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
+                <CardContent className="p-8 text-center">
+                  <div className={`w-16 h-16 rounded-xl bg-surface-elevated mx-auto mb-6 flex items-center justify-center glow-${concept.color === 'electric-blue' ? 'blue' : concept.color === 'neon-green' ? 'green' : 'orange'}`}>
                     <Icon className={`w-8 h-8 text-${concept.color}`} />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                  <p className="text-muted-foreground mb-4">{concept.description}</p>
+                  <h3 className="text-xl font-bold mb-3">{concept.title}</h3>
+                  <p className="text-base text-muted-foreground mb-6">{concept.description}</p>
                   <Button 
                     variant="outline" 
-                    size="sm" 
+                    size="default" 
                     className="w-full"
                     onClick={() => openModal(concept.topicId)}
                   >
