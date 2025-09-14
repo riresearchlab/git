@@ -1,9 +1,11 @@
 import React from 'react';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/Hero';
-import { GitBasics } from '@/components/GitBasics';
-import { GitBranching } from '@/components/GitBranching';
-import { GitAdvanced } from '@/components/GitAdvanced';
+import { GitCoreArchitecture } from '@/components/GitCoreArchitecture';
+import { GitSetupCloning } from '@/components/GitSetupCloning';
+import { GitSynchronizing } from '@/components/GitSynchronizing';
+import { GitIntegratingChanges } from '@/components/GitIntegratingChanges';
+import { GitAdvancedCommands } from '@/components/GitAdvancedCommands';
 import { Features } from '@/components/Features';
 import { Footer } from '@/components/Footer';
 
@@ -13,9 +15,11 @@ const Index = () => {
       <Navigation />
       <main>
         <Hero />
-        <GitBasics />
-        <GitBranching />
-        <GitAdvanced />
+        <GitCoreArchitecture />
+        <GitSetupCloning />
+        <GitSynchronizing />
+        <GitIntegratingChanges />
+        <GitAdvancedCommands />
         <Features />
       </main>
       <Footer />
