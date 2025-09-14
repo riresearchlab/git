@@ -3,10 +3,13 @@ import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cl
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitBasics: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [gitState, setGitState] = useState({
     initialized: false,
     staged: [] as string[],
@@ -114,6 +117,16 @@ export const GitBasics: React.FC = () => {
     setCurrentStep(0);
   };
 
+  const openModal = (topicId: string) => {
+    setSelectedTopic(topicId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTopic(null);
+  };
+
   return (
     <section id="git-basics" className="py-20 bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -137,31 +150,36 @@ export const GitBasics: React.FC = () => {
               icon: Settings,
               title: "Git Config",
               description: "Set up your Git identity and preferences",
-              color: "electric-blue"
+              color: "electric-blue",
+              topicId: "config"
             },
             {
               icon: Download,
               title: "Git Clone",
               description: "Download repository from remote server",
-              color: "neon-green"
+              color: "neon-green",
+              topicId: "clone"
             },
             {
               icon: Terminal,
               title: "Working Directory",
               description: "Your project files where you make changes",
-              color: "warm-orange"
+              color: "warm-orange",
+              topicId: "working-directory"
             },
             {
               icon: Plus,
               title: "Staging Area",
               description: "Prepared changes ready for commit",
-              color: "electric-blue"
+              color: "electric-blue",
+              topicId: "staging"
             },
             {
               icon: Cloud,
               title: "Remote Repository",
               description: "External repository for collaboration",
-              color: "neon-green"
+              color: "neon-green",
+              topicId: "remote-repository"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;
@@ -172,7 +190,15 @@ export const GitBasics: React.FC = () => {
                     <Icon className={`w-8 h-8 text-${concept.color}`} />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{concept.title}</h3>
-                  <p className="text-muted-foreground">{concept.description}</p>
+                  <p className="text-muted-foreground mb-4">{concept.description}</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => openModal(concept.topicId)}
+                  >
+                    Learn More
+                  </Button>
                 </CardContent>
               </Card>
             );
@@ -341,6 +367,13 @@ export const GitBasics: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Modal */}
+        <GitTopicModal 
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          topicId={selectedTopic}
+        />
       </div>
     </section>
   );

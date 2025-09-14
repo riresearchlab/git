@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { GitTopicModal } from '@/components/GitTopicModal';
 
 interface Commit {
   id: string;
@@ -37,6 +38,8 @@ export const GitAdvanced: React.FC = () => {
   const [remoteCommits, setRemoteCommits] = useState(3);
   const [hasUnpushedChanges, setHasUnpushedChanges] = useState(true);
   const [hasUnpulledChanges, setHasUnpulledChanges] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
   const addOutput = (command: string, output: string) => {
     setTerminalOutput(prev => [...prev, `admin@ubuntu:~$ ${command}`, output]);
@@ -113,7 +116,12 @@ export const GitAdvanced: React.FC = () => {
       setHasUnpushedChanges(false);
       addOutput(
         'git push origin main',
-        `Enumerating objects: ${localCommits * 3}, done.\nCounting objects: 100% (${localCommits * 3}/${localCommits * 3}), done.\nWriting objects: 100% (${localCommits}/${localCommits}), done.\nTotal ${localCommits} (delta 0), reused 0 (delta 0)\nTo https://github.com/riresearchlab/git\n   abc1234..def5678  main -> main`
+        `Enumerating objects: ${localCommits * 3}, done.
+Counting objects: 100% (${localCommits * 3}/${localCommits * 3}), done.
+Writing objects: 100% (${localCommits}/${localCommits}), done.
+Total ${localCommits} (delta 0), reused 0 (delta 0)
+To https://github.com/riresearchlab/git
+   abc1234..def5678  main -> main`
       );
     } else {
       addOutput('git push origin main', 'Everything up-to-date');
@@ -131,7 +139,18 @@ export const GitAdvanced: React.FC = () => {
       ]);
       addOutput(
         'git pull origin main',
-        `remote: Enumerating objects: ${remoteCommits * 2}, done.\nremote: Counting objects: 100% (${remoteCommits * 2}/${remoteCommits * 2}), done.\nremote: Compressing objects: 100% (${remoteCommits}/${remoteCommits}), done.\nremote: Total ${remoteCommits} (delta 1), reused ${remoteCommits} (delta 1)\nUnpacking objects: 100% (${remoteCommits}/${remoteCommits}), done.\nFrom https://github.com/riresearchlab/git\n * branch            main       -> FETCH_HEAD\n   def5678..xyz5678  main       -> origin/main\nUpdating def5678..xyz5678\nFast-forward\n README.md | 2 ++\n 1 file changed, 2 insertions(+)`
+        `remote: Enumerating objects: ${remoteCommits * 2}, done.
+remote: Counting objects: 100% (${remoteCommits * 2}/${remoteCommits * 2}), done.
+remote: Compressing objects: 100% (${remoteCommits}/${remoteCommits}), done.
+remote: Total ${remoteCommits} (delta 1), reused ${remoteCommits} (delta 1)
+Unpacking objects: 100% (${remoteCommits}/${remoteCommits}), done.
+From https://github.com/riresearchlab/git
+ * branch            main       -> FETCH_HEAD
+   def5678..xyz5678  main       -> origin/main
+Updating def5678..xyz5678
+Fast-forward
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)`
       );
     } else {
       addOutput('git pull origin main', 'Already up to date.');
@@ -154,6 +173,16 @@ export const GitAdvanced: React.FC = () => {
     setRemoteCommits(3);
     setHasUnpushedChanges(true);
     setHasUnpulledChanges(true);
+  };
+
+  const openModal = (topicId: string) => {
+    setSelectedTopic(topicId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTopic(null);
   };
 
   return (
@@ -179,37 +208,43 @@ export const GitAdvanced: React.FC = () => {
               icon: Upload,
               title: "Git Push",
               description: "Upload local commits to remote repository",
-              color: "electric-blue"
+              color: "electric-blue",
+              topicId: "push"
             },
             {
               icon: Download,
               title: "Git Pull",
               description: "Download and merge remote changes",
-              color: "neon-green"
+              color: "neon-green",
+              topicId: "pull"
             },
             {
               icon: RotateCcw,
               title: "Rebase",
               description: "Rewrite commit history for cleaner timeline",
-              color: "warm-orange"
+              color: "warm-orange",
+              topicId: "rebase"
             },
             {
               icon: Cherry,
               title: "Cherry Pick",
               description: "Apply specific commits to current branch",
-              color: "electric-blue"
+              color: "electric-blue",
+              topicId: "cherry-pick"
             },
             {
               icon: Archive,
               title: "Stash",
               description: "Temporarily save changes without committing",
-              color: "neon-green"
+              color: "neon-green",
+              topicId: "stash"
             },
             {
               icon: Settings,
               title: "Reset",
               description: "Move HEAD and branch pointer to specific commit",
-              color: "warm-orange"
+              color: "warm-orange",
+              topicId: "reset"
             }
           ].map((concept, idx) => {
             const Icon = concept.icon;
@@ -220,7 +255,15 @@ export const GitAdvanced: React.FC = () => {
                     <Icon className={`w-6 h-6 text-${concept.color}`} />
                   </div>
                   <h3 className="text-lg font-bold mb-2">{concept.title}</h3>
-                  <p className="text-sm text-muted-foreground">{concept.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{concept.description}</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => openModal(concept.topicId)}
+                  >
+                    Learn More
+                  </Button>
                 </CardContent>
               </Card>
             );
@@ -514,6 +557,13 @@ export const GitAdvanced: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Modal */}
+        <GitTopicModal 
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          topicId={selectedTopic}
+        />
 
       </div>
     </section>

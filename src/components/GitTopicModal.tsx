@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Code, Terminal, FileText, GitBranch, GitMerge, ArrowRight, Settings, Download, FolderOpen, Plus, Upload, RefreshCw } from 'lucide-react';
+import { Code, Terminal, FileText, GitBranch, GitMerge, ArrowRight, Settings, Download, FolderOpen, Plus, Upload, RefreshCw, RotateCcw, Cherry, Archive, Cloud } from 'lucide-react';
 
 interface GitTopicData {
   id: string;
@@ -495,6 +495,390 @@ git commit -m "Resolve merge conflicts"`,
       'Use --no-ff for important feature merges to preserve history',
       'Resolve conflicts carefully, understanding both changes',
       'Consider using rebase for cleaner history in some cases'
+    ]
+  },
+  workflow: {
+    id: 'workflow',
+    title: 'Git Workflow',
+    icon: ArrowRight,
+    description: 'Organize team collaboration with structured branching strategies. Workflows define how teams use branches to coordinate development and releases.',
+    color: 'warm-orange',
+    keyCommands: [
+      {
+        command: 'git flow init',
+        description: 'Initialize Git Flow in repository',
+        example: 'git flow init',
+        output: 'Git Flow initialized'
+      },
+      {
+        command: 'git flow feature start <name>',
+        description: 'Start a new feature branch',
+        example: 'git flow feature start user-dashboard',
+        output: 'Feature branch created and switched to'
+      },
+      {
+        command: 'git flow feature finish <name>',
+        description: 'Finish and merge feature branch',
+        example: 'git flow feature finish user-dashboard',
+        output: 'Feature merged and branch deleted'
+      }
+    ],
+    examples: [
+      {
+        title: 'GitHub Flow',
+        description: 'Simple workflow with main branch and feature branches',
+        code: `# Create feature branch
+git checkout -b feature/new-api
+
+# Work and commit changes
+git add .
+git commit -m "Implement new API endpoint"
+
+# Push and create pull request
+git push origin feature/new-api
+
+# After review, merge via GitHub
+# Delete feature branch`,
+        output: 'Pull request merged successfully'
+      },
+      {
+        title: 'Git Flow',
+        description: 'Structured workflow with develop, feature, release, and hotfix branches',
+        code: `# Start new feature
+git flow feature start user-profile
+
+# Develop feature
+git add .
+git commit -m "Add user profile component"
+
+# Finish feature (merges to develop)
+git flow feature finish user-profile
+
+# Create release branch
+git flow release start v1.2.0`,
+        output: 'Release branch created for v1.2.0'
+      }
+    ],
+    useCases: [
+      'Coordinating work across multiple developers',
+      'Managing releases and hotfixes systematically',
+      'Ensuring code quality through reviews',
+      'Maintaining stable main/production branch',
+      'Organizing features for upcoming releases'
+    ],
+    tips: [
+      'Choose workflow that fits your team size and release cycle',
+      'Establish clear naming conventions for branches',
+      'Use pull/merge requests for code review',
+      'Automate testing and deployment where possible',
+      'Document your workflow for new team members'
+    ]
+  },
+  'working-directory': {
+    id: 'working-directory',
+    title: 'Working Directory',
+    icon: Terminal,
+    description: 'Your project files where you make changes. The working directory contains all your project files and is where you edit, create, and delete files.',
+    color: 'warm-orange',
+    keyCommands: [
+      {
+        command: 'git status',
+        description: 'Check the status of files in working directory',
+        example: 'git status',
+        output: 'On branch main\nChanges not staged for commit:\n  modified: README.md'
+      },
+      {
+        command: 'git diff',
+        description: 'See changes in working directory',
+        example: 'git diff',
+        output: 'Shows line-by-line differences between working directory and staging area'
+      },
+      {
+        command: 'git checkout -- <file>',
+        description: 'Discard changes in working directory',
+        example: 'git checkout -- README.md',
+        output: 'Changes to README.md discarded'
+      }
+    ],
+    examples: [
+      {
+        title: 'Check Working Directory Status',
+        description: 'See what files have been modified',
+        code: `# Check status of all files
+git status
+
+# See specific changes
+git diff README.md
+
+# Add changes to staging area
+git add README.md`,
+        output: 'Working directory changes tracked and staged'
+      }
+    ],
+    useCases: [
+      'Making changes to project files',
+      'Creating new features or fixing bugs',
+      'Experimenting with code modifications',
+      'Reviewing changes before committing'
+    ],
+    tips: [
+      'Use git status frequently to see what changes you have',
+      'Review changes with git diff before staging',
+      'Keep working directory clean by committing regularly'
+    ]
+  },
+  'remote-repository': {
+    id: 'remote-repository',
+    title: 'Remote Repository',
+    icon: Cloud,
+    description: 'External repository for collaboration. Remote repositories are hosted versions of your project that enable team collaboration and backup.',
+    color: 'neon-green',
+    keyCommands: [
+      {
+        command: 'git remote add origin <url>',
+        description: 'Add a remote repository',
+        example: 'git remote add origin https://github.com/user/repo.git',
+        output: 'Remote origin added successfully'
+      },
+      {
+        command: 'git remote -v',
+        description: 'List all remote repositories',
+        example: 'git remote -v',
+        output: 'origin  https://github.com/user/repo.git (fetch)\norigin  https://github.com/user/repo.git (push)'
+      },
+      {
+        command: 'git fetch origin',
+        description: 'Download changes from remote without merging',
+        example: 'git fetch origin',
+        output: 'remote: Counting objects: 5, done.\nremote: Total 5 (delta 0), reused 0 (delta 0)'
+      }
+    ],
+    examples: [
+      {
+        title: 'Set Up Remote Repository',
+        description: 'Connect local repository to GitHub',
+        code: `# Add remote origin
+git remote add origin https://github.com/username/repository.git
+
+# Verify remote was added
+git remote -v
+
+# Push to remote for first time
+git push -u origin main`,
+        output: 'Local repository connected to GitHub remote'
+      }
+    ],
+    useCases: [
+      'Collaborating with team members',
+      'Backing up code to cloud platforms',
+      'Sharing code with open source community',
+      'Deploying applications from repository'
+    ],
+    tips: [
+      'Use SSH keys for secure authentication',
+      'Set up multiple remotes for different environments',
+      'Regularly fetch from remote to stay updated'
+    ]
+  },
+  rebase: {
+    id: 'rebase',
+    title: 'Git Rebase',
+    icon: RotateCcw,
+    description: 'Rewrite commit history for cleaner timeline. Rebase moves or combines commits to create a linear project history.',
+    color: 'warm-orange',
+    keyCommands: [
+      {
+        command: 'git rebase <branch>',
+        description: 'Rebase current branch onto another branch',
+        example: 'git rebase main',
+        output: 'Successfully rebased and updated refs/heads/feature.'
+      },
+      {
+        command: 'git rebase -i HEAD~3',
+        description: 'Interactive rebase for last 3 commits',
+        example: 'git rebase -i HEAD~3',
+        output: 'Opens editor to modify commit history'
+      },
+      {
+        command: 'git rebase --continue',
+        description: 'Continue rebase after resolving conflicts',
+        example: 'git rebase --continue',
+        output: 'Rebase continued successfully'
+      }
+    ],
+    examples: [
+      {
+        title: 'Feature Branch Rebase',
+        description: 'Keep feature branch up to date with main',
+        code: `# Switch to feature branch
+git checkout feature/new-component
+
+# Rebase onto main branch
+git rebase main
+
+# If conflicts occur, resolve them and continue
+git add .
+git rebase --continue`,
+        output: 'Feature branch rebased onto latest main'
+      },
+      {
+        title: 'Interactive Rebase',
+        description: 'Clean up commit history before merging',
+        code: `# Interactive rebase for last 4 commits
+git rebase -i HEAD~4
+
+# In editor, you can:
+# pick - use commit as is
+# squash - combine with previous commit
+# reword - change commit message
+# drop - remove commit`,
+        output: 'Commit history cleaned and reorganized'
+      }
+    ],
+    useCases: [
+      'Maintaining linear project history',
+      'Cleaning up commits before merging',
+      'Moving feature branch to latest main',
+      'Combining multiple small commits into logical units'
+    ],
+    tips: [
+      'Never rebase commits that have been pushed and shared',
+      'Use interactive rebase to clean up local commits',
+      'Resolve conflicts carefully during rebase process'
+    ]
+  },
+  'cherry-pick': {
+    id: 'cherry-pick',
+    title: 'Git Cherry Pick',
+    icon: Cherry,
+    description: 'Apply specific commits to current branch. Cherry-pick allows you to select specific commits from other branches and apply them.',
+    color: 'electric-blue',
+    keyCommands: [
+      {
+        command: 'git cherry-pick <commit-hash>',
+        description: 'Apply specific commit to current branch',
+        example: 'git cherry-pick abc1234',
+        output: '[main 5f2b3c4] Fix critical bug (cherry picked from commit abc1234)'
+      },
+      {
+        command: 'git cherry-pick <hash1> <hash2>',
+        description: 'Cherry-pick multiple commits',
+        example: 'git cherry-pick abc1234 def5678',
+        output: 'Multiple commits cherry-picked successfully'
+      },
+      {
+        command: 'git cherry-pick --no-commit <hash>',
+        description: 'Cherry-pick without creating commit',
+        example: 'git cherry-pick --no-commit abc1234',
+        output: 'Changes applied to working directory without commit'
+      }
+    ],
+    examples: [
+      {
+        title: 'Hotfix Cherry-pick',
+        description: 'Apply critical fix to multiple branches',
+        code: `# On main branch, create hotfix
+git checkout main
+git commit -m "Fix security vulnerability" # commit abc1234
+
+# Apply same fix to release branch
+git checkout release/v1.2
+git cherry-pick abc1234
+
+# Apply to development branch
+git checkout develop
+git cherry-pick abc1234`,
+        output: 'Hotfix applied to all required branches'
+      },
+      {
+        title: 'Feature Extraction',
+        description: 'Extract specific feature from experimental branch',
+        code: `# Cherry-pick specific feature commits
+git checkout main
+git cherry-pick commit1 commit2 commit3
+
+# Or cherry-pick range of commits
+git cherry-pick commit1^..commit3`,
+        output: 'Selected features extracted to main branch'
+      }
+    ],
+    useCases: [
+      'Applying hotfixes to multiple branches',
+      'Extracting specific features from experimental branches',
+      'Backporting fixes to older versions',
+      'Selectively merging changes without full branch merge'
+    ],
+    tips: [
+      'Cherry-pick creates new commits with different hashes',
+      'Use for small, independent changes',
+      'Avoid cherry-picking if full merge is more appropriate'
+    ]
+  },
+  reset: {
+    id: 'reset',
+    title: 'Git Reset',
+    icon: Settings,
+    description: 'Move HEAD and branch pointer to specific commit. Reset allows you to undo commits and changes at different levels.',
+    color: 'warm-orange',
+    keyCommands: [
+      {
+        command: 'git reset --soft HEAD~1',
+        description: 'Reset to previous commit, keep changes staged',
+        example: 'git reset --soft HEAD~1',
+        output: 'HEAD moved to previous commit, changes remain staged'
+      },
+      {
+        command: 'git reset --mixed HEAD~1',
+        description: 'Reset to previous commit, unstage changes',
+        example: 'git reset --mixed HEAD~1',
+        output: 'HEAD moved, changes moved to working directory'
+      },
+      {
+        command: 'git reset --hard HEAD~1',
+        description: 'Reset to previous commit, discard all changes',
+        example: 'git reset --hard HEAD~1',
+        output: 'HEAD moved, all changes discarded (destructive)'
+      }
+    ],
+    examples: [
+      {
+        title: 'Undo Last Commit',
+        description: 'Remove the most recent commit while keeping changes',
+        code: `# Undo commit but keep changes staged
+git reset --soft HEAD~1
+
+# Make additional changes
+vim file.txt
+git add file.txt
+
+# Create new commit with all changes
+git commit -m "Improved commit message"`,
+        output: 'Last commit undone, changes preserved and recommitted'
+      },
+      {
+        title: 'Unstage Files',
+        description: 'Remove files from staging area',
+        code: `# Accidentally staged wrong files
+git add .
+
+# Unstage specific file
+git reset HEAD unwanted-file.txt
+
+# Or unstage all files
+git reset HEAD`,
+        output: 'Files removed from staging area'
+      }
+    ],
+    useCases: [
+      'Undoing recent commits while preserving work',
+      'Unstaging accidentally added files',
+      'Moving to previous state in project history',
+      'Cleaning up commits before pushing'
+    ],
+    tips: [
+      '--soft keeps changes staged, --mixed unstages them, --hard discards them',
+      'Be very careful with --hard as it permanently deletes changes',
+      'Use git reflog to recover if you reset too far'
     ]
   },
   workflow: {
