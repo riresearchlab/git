@@ -41,9 +41,7 @@ export const Terminal: React.FC<TerminalProps> = ({
       {/* Terminal Content */}
       <div className={`p-4 font-mono text-sm ${height} overflow-y-auto`}>
         <div className="space-y-1">
-          {output.length === 0 ? (
-            <div className="text-gray-400">Welcome to Git Terminal. Start by running commands...</div>
-          ) : (
+          {
             output.map((line, idx) => (
               <div key={idx} className={
                 line.startsWith('admin@ubuntu:~$') || line.startsWith('$') 
@@ -55,7 +53,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                 {line}
               </div>
             ))
-          )}
+          }
           <div className="text-green-400">
             admin@ubuntu:~$ <span className="animate-pulse">_</span>
           </div>

@@ -35,6 +35,54 @@ export const GitCoreArchitecture: React.FC = () => {
     setTerminalHistory(prev => [...prev, `$ git add ${file}`, `Staged '${file}' for commit`]);
   };
 
+  const stageAllFiles = () => {
+    setGitState(prev => ({
+      ...prev,
+      workingFiles: [],
+      stagedFiles: [...prev.stagedFiles, ...prev.workingFiles]
+    }));
+    setTerminalHistory(prev => [...prev, `$ git add .`, `All files staged for commit`]);
+  };
+
+  const commitFiles = () => {
+    if (gitState.stagedFiles.length > 0) {
+      setGitState(prev => ({
+        ...prev,
+        stagedFiles: []
+      }));
+      setTerminalHistory(prev => [
+        ...prev, 
+        `$ git commit -m "add new feature"`, 
+        `[main abc1234] add new feature\n ${gitState.stagedFiles.length} files changed, ${gitState.stagedFiles.length * 15} insertions(+)`
+      ]);
+    }
+  };
+
+  const pushToRemote = () => {
+    if (gitState.remoteConnected) {
+      setTerminalHistory(prev => [
+        ...prev,
+        `$ git push origin main`,
+        `Enumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nTo https://github.com/user/repo.git\n   abc1234..def5678  main -> main`
+      ]);
+    } else {
+      setTerminalHistory(prev => [
+        ...prev,
+        `$ git push origin main`,
+        `fatal: No configured push destination`
+      ]);
+    }
+  };
+
+  const runCompleteGitCycle = () => {
+    // Stage all files
+    setTimeout(() => stageAllFiles(), 500);
+    // Commit with default message
+    setTimeout(() => commitFiles(), 1500);
+    // Push to remote
+    setTimeout(() => pushToRemote(), 2500);
+  };
+
   const unstageFile = (file: string) => {
     setGitState(prev => ({
       ...prev,
@@ -157,6 +205,11 @@ export const GitCoreArchitecture: React.FC = () => {
                       <p className="text-muted-foreground text-sm">No unstaged files</p>
                     )}
                   </div>
+                  {gitState.workingFiles.length > 0 && (
+                    <Button onClick={stageAllFiles} className="w-full mt-3" size="sm">
+                      git add .
+                    </Button>
+                  )}
                 </div>
 
                 {/* Staging Area */}
@@ -178,6 +231,11 @@ export const GitCoreArchitecture: React.FC = () => {
                       <p className="text-muted-foreground text-sm">No staged files</p>
                     )}
                   </div>
+                  {gitState.stagedFiles.length > 0 && (
+                    <Button onClick={commitFiles} className="w-full mt-3" size="sm">
+                      git commit -m "add new feature"
+                    </Button>
+                  )}
                 </div>
 
                 {/* Remote Repository */}
@@ -186,7 +244,7 @@ export const GitCoreArchitecture: React.FC = () => {
                     <Cloud className="w-4 h-4 mr-2" />
                     Remote Repository
                   </h4>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-3">
                     <span className={`text-sm ${gitState.remoteConnected ? 'text-green-400' : 'text-muted-foreground'}`}>
                       {gitState.remoteConnected ? 'Connected to GitHub' : 'Not connected'}
                     </span>
@@ -196,12 +254,24 @@ export const GitCoreArchitecture: React.FC = () => {
                       </Button>
                     )}
                   </div>
+                  {gitState.remoteConnected && (
+                    <Button onClick={pushToRemote} className="w-full" size="sm">
+                      git push origin main
+                    </Button>
+                  )}
+                </div>
+
+                {/* Complete Git Cycle Button */}
+                <div className="pt-4 border-t">
+                  <Button onClick={runCompleteGitCycle} className="w-full" variant="secondary">
+                    Complete Git Cycle (add → commit → push)
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Flow Diagram */}
+          {/* Interactive Terminal */}
           <Card className="card-glow glow-green">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -210,48 +280,94 @@ export const GitCoreArchitecture: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <Terminal
-                  title="Git Core Architecture Demo"
-                  output={terminalHistory}
-                  onClear={clearTerminal}
-                  height="h-64"
-                />
+              <Terminal
+                title="Git Core Architecture Demo"
+                output={terminalHistory}
+                onClear={clearTerminal}
+                height="h-96"
+              />
+              <Button onClick={resetDemo} variant="outline" className="w-full mt-4">
+                Reset Demo
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Git Flow Visualization - Now as 3rd and 4th sections */}
+        <div className="grid md:grid-cols-2 gap-8 mt-12">
+          {/* Working Directory Flow */}
+          <Card className="card-glow glow-orange">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <TerminalIcon className="w-5 h-5" />
+                <span>Working Directory Flow</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center space-y-4">
+                <div className="w-24 h-24 rounded-xl bg-orange-500/20 border-2 border-orange-500 mx-auto mb-4 flex items-center justify-center">
+                  <TerminalIcon className="w-10 h-10 text-orange-400" />
+                </div>
+                <h4 className="font-semibold text-orange-400">Working Directory</h4>
+                <p className="text-sm text-muted-foreground">Edit files here<br/>git add →</p>
                 
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 rounded-xl bg-orange-500/20 border-2 border-orange-500 mx-auto mb-4 flex items-center justify-center">
-                    <TerminalIcon className="w-8 h-8 text-orange-400" />
-                  </div>
-                  <h4 className="font-semibold text-orange-400">Working Directory</h4>
-                  <p className="text-sm text-muted-foreground">Edit files here</p>
+                <div className="bg-surface-elevated p-4 rounded-lg">
+                  <div className="text-xs text-muted-foreground mb-2">Current files:</div>
+                  {gitState.workingFiles.length > 0 ? (
+                    gitState.workingFiles.map((file, idx) => (
+                      <div key={idx} className="text-sm text-orange-400">{file}</div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-muted-foreground">All files staged</div>
+                  )}
+                </div>
 
-                  <div className="flex justify-center">
-                    <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
-                      git add →
-                    </div>
+                <div className="flex justify-center">
+                  <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                    git add .
                   </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                  <div className="w-20 h-20 rounded-xl bg-blue-500/20 border-2 border-blue-500 mx-auto mb-4 flex items-center justify-center">
-                    <Plus className="w-8 h-8 text-blue-400" />
+          {/* Complete Git Cycle Flow */}
+          <Card className="card-glow glow-blue">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <RefreshCw className="w-5 h-5" />
+                <span>Complete Git Cycle</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-orange-500/10 border border-orange-500/20 rounded">
+                  <div className="flex items-center space-x-2">
+                    <TerminalIcon className="w-4 h-4 text-orange-400" />
+                    <span className="text-sm font-medium">Working Directory</span>
                   </div>
-                  <h4 className="font-semibold text-blue-400">Staging Area</h4>
-                  <p className="text-sm text-muted-foreground">Review changes</p>
+                  <code className="text-xs bg-surface-elevated px-2 py-1 rounded">git add .</code>
+                </div>
 
-                  <div className="flex justify-center">
-                    <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
-                      git commit →
-                    </div>
+                <div className="flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/20 rounded">
+                  <div className="flex items-center space-x-2">
+                    <Plus className="w-4 h-4 text-blue-400" />
+                    <span className="text-sm font-medium">Staging Area</span>
                   </div>
+                  <code className="text-xs bg-surface-elevated px-2 py-1 rounded">git commit -m</code>
+                </div>
 
-                  <div className="w-20 h-20 rounded-xl bg-green-500/20 border-2 border-green-500 mx-auto mb-4 flex items-center justify-center">
-                    <Cloud className="w-8 h-8 text-green-400" />
+                <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded">
+                  <div className="flex items-center space-x-2">
+                    <Cloud className="w-4 h-4 text-green-400" />
+                    <span className="text-sm font-medium">Remote Repository</span>
                   </div>
-                  <h4 className="font-semibold text-green-400">Repository</h4>
-                  <p className="text-sm text-muted-foreground">Permanent storage</p>
+                  <code className="text-xs bg-surface-elevated px-2 py-1 rounded">git push</code>
+                </div>
 
-                  <Button onClick={resetDemo} variant="outline" className="w-full mt-6">
-                    Reset Demo
-                  </Button>
+                <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                  <h5 className="font-medium mb-2 text-sm">Default Commit Message:</h5>
+                  <code className="text-sm text-primary">"add new feature"</code>
                 </div>
               </div>
             </CardContent>
