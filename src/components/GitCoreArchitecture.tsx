@@ -179,14 +179,14 @@ export const GitCoreArchitecture: React.FC = () => {
         {/* Interactive Visualization */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Three-Stage Visualization */}
-          <Card className="card-glow glow-blue h-[700px]">
+          <Card className="card-glow glow-blue">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Settings className="w-5 h-5" />
                 <span>Three-Stage Architecture</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="h-[580px] overflow-y-auto">
+            <CardContent>
               <div className="space-y-6">
                 {/* Working Directory */}
                 <div className="p-4 border-2 border-orange-500 rounded-lg bg-orange-500/10">

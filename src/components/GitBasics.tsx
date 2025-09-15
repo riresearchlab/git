@@ -133,7 +133,7 @@ export const GitBasics: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <Badge variant="outline" className="mb-4 px-4 py-2">
-            <Terminal className="w-4 h-4 mr-2" />
+            <TerminalIcon className="w-4 h-4 mr-2" />
             Interactive Git Basics
           </Badge>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
