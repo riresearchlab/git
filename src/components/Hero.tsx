@@ -4,11 +4,6 @@ import { Button } from '@/components/ui/button';
 import { GitLogo3D } from './GitLogo3D';
 
 export const Hero: React.FC = () => {
-  const features = [
-    { icon: GitBranch, text: "Interactive 3D Visualizations" },
-    { icon: Code, text: "Real-time Command Simulators" },
-    { icon: Users, text: "Collaborative Learning" }
-  ];
 
   return (
     <section className="min-h-screen bg-gradient-hero relative overflow-hidden">
@@ -40,26 +35,6 @@ export const Hero: React.FC = () => {
                 and hands-on tutorials that make complex concepts crystal clear.
               </p>
             </div>
-
-            {/* Features */}
-            <div className="space-y-4">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div 
-                    key={index}
-                    className="flex items-center space-x-3 animate-slide-up"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center glow-blue">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <span className="text-foreground font-medium">{feature.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-
           </div>
 
           {/* 3D Logo Side */}
