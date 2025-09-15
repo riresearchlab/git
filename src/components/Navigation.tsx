@@ -7,10 +7,11 @@ export const Navigation: React.FC = () => {
 
   const navItems = [
     { name: 'Home', href: '#', icon: Home },
-    { name: 'Basics', href: '#git-basics', icon: BookOpen },
-    { name: 'Branching', href: '#git-branching', icon: Code },
-    { name: 'Advanced', href: '#git-advanced', icon: Users },
-    { name: 'Features', href: '#features', icon: Award },
+    { name: 'Core', href: '#git-core-architecture', icon: BookOpen },
+    { name: 'Setup', href: '#git-setup-cloning', icon: Code },
+    { name: 'Sync', href: '#git-synchronizing', icon: Users },
+    { name: 'Integrating', href: '#git-integrating-changes', icon: Award },
+    { name: 'Advanced', href: '#git-advanced-commands', icon: Award },
   ];
 
   return (
@@ -20,7 +21,7 @@ export const Navigation: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <GitBranch className="w-8 h-8 text-primary animate-pulse-glow" />
-            <span className="text-xl font-bold text-gradient-primary">GitMaster</span>
+            <span className="text-xl font-bold text-gradient-primary">Git Bioscope</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -38,9 +39,6 @@ export const Navigation: React.FC = () => {
                 </a>
               );
             })}
-            <Button className="btn-hero">
-              Get Started
-            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -74,11 +72,6 @@ export const Navigation: React.FC = () => {
                   </a>
                 );
               })}
-              <div className="px-3 py-2">
-                <Button className="btn-hero w-full">
-                  Get Started
-                </Button>
-              </div>
             </div>
           </div>
         )}

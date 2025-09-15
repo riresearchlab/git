@@ -4,36 +4,36 @@ import { GitBranch, Twitter, Github, Linkedin, Mail, Heart } from 'lucide-react'
 export const Footer: React.FC = () => {
   const footerLinks = {
     product: [
-      { name: 'Features', href: '#features' },
-      { name: 'Pricing', href: '#pricing' },
-      { name: 'Changelog', href: '#changelog' },
-      { name: 'Roadmap', href: '#roadmap' }
+      { name: 'Features', href: 'https://mdrakibtrofder.github.io/' },
+      { name: 'Our Journey', href: 'https://github.com/riresearchlab' },
+      { name: 'Changelog', href: 'https://github.com/riresearchlab/git/blob/main/README.md' },
+      { name: 'Roadmap', href: 'https://roadmap.sh/git-github' }
     ],
     learning: [
-      { name: 'Basic Course', href: '#basic' },
-      { name: 'Intermediate', href: '#intermediate' },
-      { name: 'Advanced', href: '#advanced' },
-      { name: 'Tutorials', href: '#tutorials' }
+      { name: 'Basic', href: '#git-core-architecture' },
+      { name: 'Intermediate', href: '#git-integrating-changes' },
+      { name: 'Advanced', href: '#git-advanced-commands' },
+      { name: 'Tutorials', href: 'https://www.w3schools.com/git/' }
     ],
     community: [
-      { name: 'Discord', href: '#discord' },
-      { name: 'Forums', href: '#forums' },
-      { name: 'Blog', href: '#blog' },
-      { name: 'Support', href: '#support' }
+      { name: 'Medium', href: 'https://discord.gg/bmU9UeAy' },
+      { name: 'Forums', href: 'https://rakib3004.medium.com/' },
+      { name: 'Blog', href: 'https://programming-with-rakib.blogspot.com/' },
+      { name: 'Support', href: 'https://riresearchlab.github.io/' }
     ],
     company: [
-      { name: 'About', href: '#about' },
-      { name: 'Careers', href: '#careers' },
-      { name: 'Privacy', href: '#privacy' },
-      { name: 'Terms', href: '#terms' }
+      { name: 'About', href: 'https://riresearchlab.github.io/' },
+      { name: 'Careers', href: 'https://www.google.com/about/careers/applications/' },
+      { name: 'Privacy', href: 'https://policies.google.com/privacy?hl=en-US' },
+      { name: 'Terms', href: 'https://opensource.org/license/mit' }
     ]
   };
 
   const socialLinks = [
-    { icon: Twitter, href: '#twitter', label: 'Twitter' },
-    { icon: Github, href: '#github', label: 'GitHub' },
-    { icon: Linkedin, href: '#linkedin', label: 'LinkedIn' },
-    { icon: Mail, href: '#email', label: 'Email' }
+    { icon: Twitter, href: 'https://x.com/mdrakibtrofder', label: 'Twitter' },
+    { icon: Github, href: 'https://github.com/riresearchlab', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/mdrakibtrofder/', label: 'LinkedIn' },
+    { icon: Mail, href: 'mailto:mdrakibtrofder@gmail.com', label: 'Email' }
   ];
 
   return (
@@ -46,7 +46,7 @@ export const Footer: React.FC = () => {
             <div className="col-span-2 space-y-4">
               <div className="flex items-center space-x-2">
                 <GitBranch className="w-8 h-8 text-primary animate-pulse-glow" />
-                <span className="text-xl font-bold text-gradient-primary">GitMaster</span>
+                <span className="text-xl font-bold text-gradient-primary">Git Bioscope</span>
               </div>
               <p className="text-muted-foreground max-w-md">
                 The ultimate interactive platform for mastering Git through 3D visualizations, 
@@ -144,7 +144,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-border flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-            <span>© 2024 GitMaster. All rights reserved.</span>
+            <span>© 2025 Git Bioscope. All rights reserved.</span>
           </div>
           
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
