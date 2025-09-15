@@ -237,7 +237,7 @@ export const GitSetupCloning: React.FC = () => {
                 title="Git Setup & Cloning Demo"
                 output={terminalHistory}
                 onClear={clearTerminal}
-                height="h-96"
+                height="h-[320px]"
               />
             </CardContent>
           </Card>

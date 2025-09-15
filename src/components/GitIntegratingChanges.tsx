@@ -320,7 +320,7 @@ export const GitIntegratingChanges: React.FC = () => {
                   title="Git Integration Demo"
                   output={terminalOutput}
                   onClear={clearTerminal}
-                  height="h-64"
+                  height="h-[320px]"
                 />
 
                 {/* Tag Management */}

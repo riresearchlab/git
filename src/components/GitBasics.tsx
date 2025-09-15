@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Terminal, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cloud, FileText } from 'lucide-react';
+import { Terminal as TerminalIcon, GitBranch, Plus, Save, Eye, RefreshCw, Settings, Download, Cloud, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Terminal } from '@/components/ui/terminal';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitBasics: React.FC = () => {
@@ -161,7 +162,7 @@ export const GitBasics: React.FC = () => {
               topicId: "clone"
             },
             {
-              icon: Terminal,
+              icon: TerminalIcon,
               title: "Working Directory",
               description: "Your project files where you make changes",
               color: "warm-orange",
@@ -316,7 +317,7 @@ export const GitBasics: React.FC = () => {
             <Card className="card-glow glow-orange">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Terminal className="w-5 h-5" />
+                  <TerminalIcon className="w-5 h-5" />
                   <span>Git Commands</span>
                 </CardTitle>
               </CardHeader>
@@ -346,31 +347,17 @@ export const GitBasics: React.FC = () => {
           <Card className="card-glow glow-blue">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Terminal className="w-5 h-5" />
+                <TerminalIcon className="w-5 h-5" />
                 <span>Interactive Terminal</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Terminal Window */}
-              <div className="bg-black rounded-lg p-4 font-mono text-sm h-[600px]">
-                <div className="flex items-center space-x-2 mb-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-400 ml-2">Terminal</span>
-                </div>
-                
-                <div className="text-green-400 space-y-1 h-[550px] overflow-y-auto">
-                  {terminalHistory.map((line, idx) => (
-                    <div key={idx} className={line.startsWith('admin@ubuntu:~$') ? 'text-green-400' : 'text-gray-300'}>
-                      {line}
-                    </div>
-                  ))}
-                  <div className="text-green-400">
-                    admin@ubuntu:~$ <span className="animate-pulse">_</span>
-                  </div>
-                </div>
-              </div>
+              <Terminal
+                title="Git Basics Demo"
+                output={terminalHistory}
+                onClear={() => setTerminalHistory([])}
+                height="h-[450px]"
+              />
             </CardContent>
           </Card>
         </div>

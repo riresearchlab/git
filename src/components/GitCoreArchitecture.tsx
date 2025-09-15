@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Terminal } from '@/components/ui/terminal';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GitTopicModal } from '@/components/GitTopicModal';
 
 export const GitCoreArchitecture: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [activeFlowTab, setActiveFlowTab] = useState('working');
   const [gitState, setGitState] = useState({
     workingFiles: ['index.html', 'style.css', 'script.js'],
     stagedFiles: [] as string[],
@@ -177,14 +179,14 @@ export const GitCoreArchitecture: React.FC = () => {
         {/* Interactive Visualization */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Three-Stage Visualization */}
-          <Card className="card-glow glow-blue">
+          <Card className="card-glow glow-blue h-[700px]">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Settings className="w-5 h-5" />
                 <span>Three-Stage Architecture</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[580px] overflow-y-auto">
               <div className="space-y-6">
                 {/* Working Directory */}
                 <div className="p-4 border-2 border-orange-500 rounded-lg bg-orange-500/10">
@@ -272,19 +274,19 @@ export const GitCoreArchitecture: React.FC = () => {
           </Card>
 
           {/* Interactive Terminal */}
-          <Card className="card-glow glow-green">
+          <Card className="card-glow glow-green h-[700px]">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <RefreshCw className="w-5 h-5" />
                 <span>Interactive Terminal</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col">
               <Terminal
                 title="Git Core Architecture Demo"
                 output={terminalHistory}
                 onClear={clearTerminal}
-                height="h-96"
+                height="h-[500px]"
               />
               <Button onClick={resetDemo} variant="outline" className="w-full mt-4">
                 Reset Demo
@@ -293,53 +295,122 @@ export const GitCoreArchitecture: React.FC = () => {
           </Card>
         </div>
 
-        {/* Git Flow Visualization - Now as 3rd and 4th sections */}
+        {/* Git Flow Visualization with Tabs */}
         <div className="grid md:grid-cols-2 gap-8 mt-12">
-          {/* Working Directory Flow */}
-          <Card className="card-glow glow-orange">
+          {/* Git Flow Tabs */}
+          <Card className="card-glow glow-orange h-[600px]">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <TerminalIcon className="w-5 h-5" />
-                <span>Working Directory Flow</span>
+                <Settings className="w-5 h-5" />
+                <span>Git Flow Visualization</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center space-y-4">
-                <div className="w-24 h-24 rounded-xl bg-orange-500/20 border-2 border-orange-500 mx-auto mb-4 flex items-center justify-center">
-                  <TerminalIcon className="w-10 h-10 text-orange-400" />
-                </div>
-                <h4 className="font-semibold text-orange-400">Working Directory</h4>
-                <p className="text-sm text-muted-foreground">Edit files here<br/>git add →</p>
+            <CardContent className="h-[500px]">
+              <Tabs value={activeFlowTab} onValueChange={setActiveFlowTab} className="h-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="working" className="flex items-center space-x-2">
+                    <TerminalIcon className="w-4 h-4" />
+                    <span>Working</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="staging" className="flex items-center space-x-2">
+                    <Plus className="w-4 h-4" />
+                    <span>Staging</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="remote" className="flex items-center space-x-2">
+                    <Cloud className="w-4 h-4" />
+                    <span>Remote</span>
+                  </TabsTrigger>
+                </TabsList>
                 
-                <div className="bg-surface-elevated p-4 rounded-lg">
-                  <div className="text-xs text-muted-foreground mb-2">Current files:</div>
-                  {gitState.workingFiles.length > 0 ? (
-                    gitState.workingFiles.map((file, idx) => (
-                      <div key={idx} className="text-sm text-orange-400">{file}</div>
-                    ))
-                  ) : (
-                    <div className="text-sm text-muted-foreground">All files staged</div>
-                  )}
-                </div>
+                <TabsContent value="working" className="h-[420px] overflow-y-auto">
+                  <div className="text-center space-y-4 pt-4">
+                    <div className="w-24 h-24 rounded-xl bg-orange-500/20 border-2 border-orange-500 mx-auto mb-4 flex items-center justify-center">
+                      <TerminalIcon className="w-10 h-10 text-orange-400" />
+                    </div>
+                    <h4 className="font-semibold text-orange-400">Working Directory</h4>
+                    <p className="text-sm text-muted-foreground">Edit files here<br/>git add →</p>
+                    
+                    <div className="bg-surface-elevated p-4 rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-2">Current files:</div>
+                      {gitState.workingFiles.length > 0 ? (
+                        gitState.workingFiles.map((file, idx) => (
+                          <div key={idx} className="text-sm text-orange-400">{file}</div>
+                        ))
+                      ) : (
+                        <div className="text-sm text-muted-foreground">All files staged</div>
+                      )}
+                    </div>
 
-                <div className="flex justify-center">
-                  <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
-                    git add .
+                    <div className="flex justify-center">
+                      <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                        git add .
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </TabsContent>
+                
+                <TabsContent value="staging" className="h-[420px] overflow-y-auto">
+                  <div className="text-center space-y-4 pt-4">
+                    <div className="w-24 h-24 rounded-xl bg-blue-500/20 border-2 border-blue-500 mx-auto mb-4 flex items-center justify-center">
+                      <Plus className="w-10 h-10 text-blue-400" />
+                    </div>
+                    <h4 className="font-semibold text-blue-400">Staging Area</h4>
+                    <p className="text-sm text-muted-foreground">Prepared changes<br/>git commit →</p>
+                    
+                    <div className="bg-surface-elevated p-4 rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-2">Staged files:</div>
+                      {gitState.stagedFiles.length > 0 ? (
+                        gitState.stagedFiles.map((file, idx) => (
+                          <div key={idx} className="text-sm text-blue-400">{file}</div>
+                        ))
+                      ) : (
+                        <div className="text-sm text-muted-foreground">No staged files</div>
+                      )}
+                    </div>
+
+                    <div className="flex justify-center">
+                      <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                        git commit -m "message"
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="remote" className="h-[420px] overflow-y-auto">
+                  <div className="text-center space-y-4 pt-4">
+                    <div className="w-24 h-24 rounded-xl bg-green-500/20 border-2 border-green-500 mx-auto mb-4 flex items-center justify-center">
+                      <Cloud className="w-10 h-10 text-green-400" />
+                    </div>
+                    <h4 className="font-semibold text-green-400">Remote Repository</h4>
+                    <p className="text-sm text-muted-foreground">External repository<br/>git push →</p>
+                    
+                    <div className="bg-surface-elevated p-4 rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-2">Connection status:</div>
+                      <div className={`text-sm ${gitState.remoteConnected ? 'text-green-400' : 'text-muted-foreground'}`}>
+                        {gitState.remoteConnected ? 'Connected to GitHub' : 'Not connected'}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center">
+                      <div className="text-center text-xs text-muted-foreground bg-surface-elevated px-3 py-1 rounded">
+                        git push origin main
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
 
           {/* Complete Git Cycle Flow */}
-          <Card className="card-glow glow-blue">
+          <Card className="card-glow glow-blue h-[600px]">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <RefreshCw className="w-5 h-5" />
                 <span>Complete Git Cycle</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[500px] overflow-y-auto">
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 bg-orange-500/10 border border-orange-500/20 rounded">
                   <div className="flex items-center space-x-2">

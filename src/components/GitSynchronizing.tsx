@@ -289,7 +289,7 @@ To https://github.com/user/repo
                 title="Git Synchronization Demo"
                 output={terminalOutput}
                 onClear={clearTerminal}
-                height="h-96"
+                height="h-[320px]"
               />
               
               <Button onClick={resetDemo} variant="outline" className="w-full mt-4">

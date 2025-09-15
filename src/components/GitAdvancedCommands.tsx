@@ -87,9 +87,14 @@ export const GitAdvancedCommands: React.FC = () => {
 
     setWorkingChanges(prev => [...prev, ...stashEntry.files]);
     setStash(prev => prev.filter(s => s.id !== stashId));
+    const filesOutput = stashEntry.files.map(f => `  modified: ${f}`).join('\n');
     addOutput(
       `git stash apply stash@{0}`,
-      `On branch main: ${stashEntry.message}\nChanges applied successfully\n\nChanges not staged for commit:\n${stashEntry.files.map(f => `  modified: ${f}`).join('\n')}`
+      `On branch main: ${stashEntry.message}
+Changes applied successfully
+
+Changes not staged for commit:
+${filesOutput}`
     );
   };
 
@@ -355,7 +360,7 @@ export const GitAdvancedCommands: React.FC = () => {
                   title="Git Advanced Commands Demo"
                   output={terminalOutput}
                   onClear={clearTerminal}
-                  height="h-80"
+                  height="h-[320px]"
                 />
 
                 {/* Status Information */}
