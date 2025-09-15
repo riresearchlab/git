@@ -4,8 +4,8 @@ import { GitBranch, Twitter, Github, Linkedin, Mail, Heart } from 'lucide-react'
 export const Footer: React.FC = () => {
   const footerLinks = {
     product: [
-      { name: 'Features', href: 'https://mdrakibtrofder.github.io/' },
-      { name: 'Our Journey', href: 'https://github.com/riresearchlab' },
+      { name: 'Features', href: 'https://riresearchlab.github.io/' },
+      { name: 'Docs', href: 'https://git-scm.com/doc' },
       { name: 'Changelog', href: 'https://github.com/riresearchlab/git/blob/main/README.md' },
       { name: 'Roadmap', href: 'https://roadmap.sh/git-github' }
     ],
