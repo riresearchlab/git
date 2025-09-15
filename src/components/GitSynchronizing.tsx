@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Upload, GitBranch, Globe, RefreshCw, TerminalIcon } from 'lucide-react';
+import { Download, Upload, GitBranch, Globe, RefreshCw, TerminalIcon, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -72,6 +72,19 @@ To https://github.com/user/repo
     setBranches(prev => [...prev, newBranch]);
     setCurrentBranch(newBranch);
     addOutput(`git checkout -b ${newBranch}`, `Switched to a new branch '${newBranch}'`);
+  };
+
+  const deleteBranch = (branchToDelete: string) => {
+    if (['main', 'develop', 'feature/auth'].includes(branchToDelete)) {
+      addOutput(`git branch -d ${branchToDelete}`, `error: Cannot delete protected branch '${branchToDelete}'.`);
+      return;
+    }
+    if (branchToDelete === currentBranch) {
+      addOutput(`git branch -d ${branchToDelete}`, `error: Cannot delete branch '${branchToDelete}' which is currently checked out.`);
+      return;
+    }
+    setBranches(prev => prev.filter(b => b !== branchToDelete));
+    addOutput(`git branch -d ${branchToDelete}`, `Deleted branch ${branchToDelete}.`);
   };
 
   const switchBranch = (branch: string) => {
@@ -259,16 +272,32 @@ To https://github.com/user/repo
                       </Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {branches.map(branch => (
-                        <Button
-                          key={branch}
-                          size="sm"
-                          variant={currentBranch === branch ? "default" : "outline"}
-                          onClick={() => switchBranch(branch)}
-                        >
-                          {branch}
-                        </Button>
-                      ))}
+                      {branches.map(branch => {
+                        const isProtected = ['main', 'develop', 'feature/auth'].includes(branch);
+                        return (
+                          <div key={branch} className="flex">
+                            <Button
+                              size="sm"
+                              variant={currentBranch === branch ? "default" : "outline"}
+                              onClick={() => switchBranch(branch)}
+                              className={isProtected ? 'rounded-full' : 'rounded-r-none'}
+                            >
+                              {branch}
+                            </Button>
+                            {!isProtected && (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="rounded-l-none rounded-r-full px-2"
+                                onClick={() => deleteBranch(branch)}
+                                disabled={currentBranch === branch}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
