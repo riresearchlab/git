@@ -39,7 +39,7 @@ export const GitSynchronizing: React.FC = () => {
         'git pull origin main',
         `remote: Enumerating objects: ${remoteCommits * 2}, done.
 remote: Counting objects: 100% (${remoteCommits * 2}/${remoteCommits * 2}), done.
-Updating abc1234..def5678
+Updating d6d822b..cbc5e4c
 Fast-forward
  README.md | 2 ++
  1 file changed, 2 insertions(+)`
@@ -60,7 +60,7 @@ Counting objects: 100% (${localCommits * 3}/${localCommits * 3}), done.
 Writing objects: 100% (${localCommits}/${localCommits}), done.
 Total ${localCommits} (delta 0), reused 0 (delta 0)
 To https://github.com/user/repo
-   abc1234..def5678  main -> main`
+   d6d822b..cbc5e4c  main -> main`
       );
     } else {
       addOutput('git push origin main', 'Everything up-to-date');

@@ -224,7 +224,7 @@ export const GitBranching: React.FC = () => {
       }
       return branch;
     }));
-    addCommand(`git commit -m "${message}"`, `[${currentBranch} abc1234] ${message}`);
+    addCommand(`git commit -m "${message}"`, `[${currentBranch} d6d822b] ${message}`);
   };
 
   const mergeBranch = (sourceBranch: string) => {

@@ -22,10 +22,10 @@ export const GitAdvancedCommands: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [commits, setCommits] = useState<Commit[]>([
-    { id: '1', message: 'Initial commit', hash: 'abc1234' },
-    { id: '2', message: 'Add authentication', hash: 'def5678' },
-    { id: '3', message: 'Fix security bug', hash: 'ghi9012' },
-    { id: '4', message: 'Add user dashboard', hash: 'jkl3456' },
+    { id: '1', message: 'Initial commit', hash: 'd6d822b' },
+    { id: '2', message: 'Add authentication', hash: 'cbc5e4c' },
+    { id: '3', message: 'Fix security bug', hash: '9f15548' },
+    { id: '4', message: 'Add user dashboard', hash: '31686f5' },
   ]);
   const [stash, setStash] = useState<StashEntry[]>([]);
   const [workingChanges, setWorkingChanges] = useState(['src/auth.js', 'styles/main.css']);
@@ -77,7 +77,7 @@ export const GitAdvancedCommands: React.FC = () => {
     setWorkingChanges([]);
     addOutput(
       `git stash push -m "${message}"`,
-      `Saved working directory and index state On main: ${message}\\nHEAD is now at abc1234 ${commits[commits.length - 1]?.message}`
+      `Saved working directory and index state On main: ${message}\\nHEAD is now at d6d822b ${commits[commits.length - 1]?.message}`
     );
   };
 
@@ -125,10 +125,10 @@ ${filesOutput}`
 
   const resetDemo = () => {
     setCommits([
-      { id: '1', message: 'Initial commit', hash: 'abc1234' },
-      { id: '2', message: 'Add authentication', hash: 'def5678' },
-      { id: '3', message: 'Fix security bug', hash: 'ghi9012' },
-      { id: '4', message: 'Add user dashboard', hash: 'jkl3456' },
+      { id: '1', message: 'Initial commit', hash: 'd6d822b' },
+      { id: '2', message: 'Add authentication', hash: 'cbc5e4c' },
+      { id: '3', message: 'Fix security bug', hash: '9f15548' },
+      { id: '4', message: 'Add user dashboard', hash: '31686f5' },
     ]);
     setStash([]);
     setWorkingChanges(['src/auth.js', 'styles/main.css']);

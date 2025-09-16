@@ -58,7 +58,7 @@ export const GitSetupCloning: React.FC = () => {
   const showLog = () => {
     executeCommand(
       'git log --oneline',
-      'abc1234 Initial commit\ndef5678 Add README\nghi9012 Setup project structure'
+      'd6d822b Initial commit\ncbc5e4c Add README\n9f15548 Setup project structure'
     );
   };
 

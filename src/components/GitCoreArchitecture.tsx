@@ -55,7 +55,7 @@ export const GitCoreArchitecture: React.FC = () => {
       setTerminalHistory(prev => [
         ...prev, 
         `$ git commit -m "add new feature"`, 
-        `[main abc1234] add new feature\n ${gitState.stagedFiles.length} files changed, ${gitState.stagedFiles.length * 15} insertions(+)`
+        `[main d6d822b] add new feature\n ${gitState.stagedFiles.length} files changed, ${gitState.stagedFiles.length * 15} insertions(+)`
       ]);
     }
   };
@@ -65,7 +65,7 @@ export const GitCoreArchitecture: React.FC = () => {
       setTerminalHistory(prev => [
         ...prev,
         `$ git push origin main`,
-        `Enumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nTo https://github.com/user/repo.git\n   abc1234..def5678  main -> main`
+        `Enumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nTo https://github.com/user/repo.git\n   d6d822b..cbc5e4c  main -> main`
       ]);
     } else {
       setTerminalHistory(prev => [

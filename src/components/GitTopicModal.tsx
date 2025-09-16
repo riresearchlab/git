@@ -255,7 +255,7 @@ git push`,
         command: 'git pull',
         description: 'Fetch and merge from upstream branch',
         example: 'git pull',
-        output: 'Updating abc1234..def5678\nFast-forward'
+        output: 'Updating d6d822b..cbc5e4c\nFast-forward'
       },
       {
         command: 'git pull origin <branch>',
@@ -314,7 +314,7 @@ git pull origin main
         command: 'git stash list',
         description: 'View all stashes',
         example: 'git stash list',
-        output: 'stash@{0}: WIP on main: abc1234 Add feature'
+        output: 'stash@{0}: WIP on main: d6d822b Add feature'
       }
     ],
     examples: [
@@ -469,7 +469,7 @@ git checkout main
 
 # Merge feature branch (creates merge commit)
 git merge feature/new-component`,
-        output: 'Merge commit abc1234 created'
+        output: 'Merge commit d6d822b created'
       },
       {
         title: 'Resolving Merge Conflicts',
@@ -680,19 +680,19 @@ git rebase -i HEAD~4
       {
         command: 'git cherry-pick <commit-hash>',
         description: 'Apply specific commit to current branch',
-        example: 'git cherry-pick abc1234',
-        output: '[main 5f2b3c4] Fix critical bug (cherry picked from commit abc1234)'
+        example: 'git cherry-pick d6d822b',
+        output: '[main 5f2b3c4] Fix critical bug (cherry picked from commit d6d822b)'
       },
       {
         command: 'git cherry-pick <hash1> <hash2>',
         description: 'Cherry-pick multiple commits',
-        example: 'git cherry-pick abc1234 def5678',
+        example: 'git cherry-pick d6d822b cbc5e4c',
         output: 'Multiple commits cherry-picked successfully'
       },
       {
         command: 'git cherry-pick --no-commit <hash>',
         description: 'Cherry-pick without creating commit',
-        example: 'git cherry-pick --no-commit abc1234',
+        example: 'git cherry-pick --no-commit d6d822b',
         output: 'Changes applied to working directory without commit'
       }
     ],
@@ -702,15 +702,15 @@ git rebase -i HEAD~4
         description: 'Apply critical fix to multiple branches',
         code: `# On main branch, create hotfix
 git checkout main
-git commit -m "Fix security vulnerability" # commit abc1234
+git commit -m "Fix security vulnerability" # commit d6d822b
 
 # Apply same fix to release branch
 git checkout release/v1.2
-git cherry-pick abc1234
+git cherry-pick d6d822b
 
 # Apply to development branch
 git checkout develop
-git cherry-pick abc1234`,
+git cherry-pick d6d822b`,
         output: 'Hotfix applied to all required branches'
       },
       {
@@ -815,19 +815,19 @@ git reset HEAD`,
         command: 'git log',
         description: 'Display commit history',
         example: 'git log',
-        output: 'commit abc1234567890...\nAuthor: John Doe <john@example.com>\nDate: Mon Jan 15 10:30:45 2024 +0000\n\n    Add user authentication feature'
+        output: 'commit d6d822b567890...\nAuthor: John Doe <john@example.com>\nDate: Mon Jan 15 10:30:45 2024 +0000\n\n    Add user authentication feature'
       },
       {
         command: 'git log --oneline',
         description: 'Show condensed commit history',
         example: 'git log --oneline',
-        output: 'abc1234 Add user authentication feature\ndef5678 Fix login bug\nghi9012 Update README'
+        output: 'd6d822b Add user authentication feature\ncbc5e4c Fix login bug\n9f15548 Update README'
       },
       {
         command: 'git log --graph',
         description: 'Display commit history as a graph',
         example: 'git log --graph --oneline',
-        output: '* abc1234 Add user authentication\n* def5678 Fix login bug\n* ghi9012 Update README'
+        output: '* d6d822b Add user authentication\n* cbc5e4c Fix login bug\n* 9f15548 Update README'
       },
       {
         command: 'git log -p',

@@ -17,10 +17,10 @@ export const GitIntegratingChanges: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [commits, setCommits] = useState<Commit[]>([
-    { id: '1', message: 'Initial commit', branch: 'main', hash: 'abc1234' },
-    { id: '2', message: 'Add feature A', branch: 'main', hash: 'def5678' },
-    { id: '3', message: 'Feature B development', branch: 'feature', hash: 'ghi9012' },
-    { id: '4', message: 'Fix bug in feature B', branch: 'feature', hash: 'jkl3456' },
+    { id: '1', message: 'Initial commit', branch: 'main', hash: 'd6d822b' },
+    { id: '2', message: 'Add feature A', branch: 'main', hash: 'cbc5e4c' },
+    { id: '3', message: 'Feature B development', branch: 'feature', hash: '9f15548' },
+    { id: '4', message: 'Fix bug in feature B', branch: 'feature', hash: '31686f5' },
   ]);
   const [rebaseResult, setRebaseResult] = useState<Commit[]>([]);
   const [mergeResult, setMergeResult] = useState<Commit[]>([]);
@@ -85,7 +85,7 @@ export const GitIntegratingChanges: React.FC = () => {
   const demonstrateTagging = () => {
     addOutput(
       'git tag v1.0.0',
-      "Tag 'v1.0.0' created for commit abc1234"
+      "Tag 'v1.0.0' created for commit 6b94c7e"
     );
     setTimeout(() => {
       addOutput(
@@ -106,14 +106,14 @@ export const GitIntegratingChanges: React.FC = () => {
     const newTag = {
       id: `tag-${Date.now()}`,
       name: tagName,
-      commit: latestCommit?.hash || 'abc1234',
+      commit: latestCommit?.hash || '6b94c7e',
       message: message || `Release ${tagName}`
     };
     
     setTags(prev => [...prev, newTag]);
     addOutput(
       `git tag ${message ? `-a ${tagName} -m "${message}"` : tagName}`,
-      `Tag '${tagName}' created for commit ${latestCommit?.hash || 'abc1234'}`
+      `Tag '${tagName}' created for commit ${latestCommit?.hash || '6b94c7e'}`
     );
   };
 
@@ -135,10 +135,10 @@ export const GitIntegratingChanges: React.FC = () => {
 
   const resetDemo = () => {
     setCommits([
-      { id: '1', message: 'Initial commit', branch: 'main', hash: 'abc1234' },
-      { id: '2', message: 'Add feature A', branch: 'main', hash: 'def5678' },
-      { id: '3', message: 'Feature B development', branch: 'feature', hash: 'ghi9012' },
-      { id: '4', message: 'Fix bug in feature B', branch: 'feature', hash: 'jkl3456' },
+      { id: '1', message: 'Initial commit', branch: 'main', hash: 'b5d6d55' },
+      { id: '2', message: 'Add feature A', branch: 'main', hash: 'ffa98e7' },
+      { id: '3', message: 'Feature B development', branch: 'feature', hash: '4c9ef48' },
+      { id: '4', message: 'Fix bug in feature B', branch: 'feature', hash: 'b373a6f' },
     ]);
     setRebaseResult([]);
     setMergeResult([]);

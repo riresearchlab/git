@@ -77,7 +77,7 @@ export const GitBasics: React.FC = () => {
             committed: [...prev.committed, { message: 'Initial commit', files: [...prev.staged] }],
             staged: []
           }));
-          setTerminalHistory(prev => [...prev, '[main (root-commit) abc1234] Initial commit', ' 1 file changed, 0 insertions(+), 0 deletions(-)']);
+          setTerminalHistory(prev => [...prev, '[main (root-commit) d6d822b] Initial commit', ' 1 file changed, 0 insertions(+), 0 deletions(-)']);
         } else {
           setTerminalHistory(prev => [...prev, 'nothing to commit, working tree clean']);
         }

@@ -23,10 +23,10 @@ interface StashEntry {
 
 export const GitAdvanced: React.FC = () => {
   const [commits, setCommits] = useState<Commit[]>([
-    { id: '1', message: 'Initial commit', author: 'You', date: '2024-01-01', hash: 'abc1234' },
-    { id: '2', message: 'Add feature A', author: 'You', date: '2024-01-02', hash: 'def5678' },
-    { id: '3', message: 'Fix typo', author: 'You', date: '2024-01-03', hash: 'ghi9012' },
-    { id: '4', message: 'Add feature B', author: 'You', date: '2024-01-04', hash: 'jkl3456' },
+    { id: '1', message: 'Initial commit', author: 'You', date: '2024-01-01', hash: 'd6d822b' },
+    { id: '2', message: 'Add feature A', author: 'You', date: '2024-01-02', hash: 'cbc5e4c' },
+    { id: '3', message: 'Fix typo', author: 'You', date: '2024-01-03', hash: '9f15548' },
+    { id: '4', message: 'Add feature B', author: 'You', date: '2024-01-04', hash: '31686f5' },
     { id: '5', message: 'Update README', author: 'You', date: '2024-01-05', hash: 'mno7890' },
   ]);
 
@@ -121,7 +121,7 @@ Counting objects: 100% (${localCommits * 3}/${localCommits * 3}), done.
 Writing objects: 100% (${localCommits}/${localCommits}), done.
 Total ${localCommits} (delta 0), reused 0 (delta 0)
 To https://github.com/riresearchlab/git
-   abc1234..def5678  main -> main`
+   d6d822b..cbc5e4c  main -> main`
       );
     } else {
       addOutput('git push origin main', 'Everything up-to-date');
@@ -146,8 +146,8 @@ remote: Total ${remoteCommits} (delta 1), reused ${remoteCommits} (delta 1)
 Unpacking objects: 100% (${remoteCommits}/${remoteCommits}), done.
 From https://github.com/riresearchlab/git
  * branch            main       -> FETCH_HEAD
-   def5678..xyz5678  main       -> origin/main
-Updating def5678..xyz5678
+   cbc5e4c..xyz5678  main       -> origin/main
+Updating cbc5e4c..xyz5678
 Fast-forward
  README.md | 2 ++
  1 file changed, 2 insertions(+)`
@@ -159,10 +159,10 @@ Fast-forward
 
   const resetDemo = () => {
     setCommits([
-      { id: '1', message: 'Initial commit', author: 'You', date: '2024-01-01', hash: 'abc1234' },
-      { id: '2', message: 'Add feature A', author: 'You', date: '2024-01-02', hash: 'def5678' },
-      { id: '3', message: 'Fix typo', author: 'You', date: '2024-01-03', hash: 'ghi9012' },
-      { id: '4', message: 'Add feature B', author: 'You', date: '2024-01-04', hash: 'jkl3456' },
+      { id: '1', message: 'Initial commit', author: 'You', date: '2024-01-01', hash: 'd6d822b' },
+      { id: '2', message: 'Add feature A', author: 'You', date: '2024-01-02', hash: 'cbc5e4c' },
+      { id: '3', message: 'Fix typo', author: 'You', date: '2024-01-03', hash: '9f15548' },
+      { id: '4', message: 'Add feature B', author: 'You', date: '2024-01-04', hash: '31686f5' },
       { id: '5', message: 'Update README', author: 'You', date: '2024-01-05', hash: 'mno7890' },
     ]);
     setStash([]);
