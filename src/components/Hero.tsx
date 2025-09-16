@@ -19,7 +19,7 @@ export const Hero: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center space-x-2 text-primary font-semibold">
                 <Star className="w-5 h-5 animate-pulse-glow" />
-                <span>Your Journey to Git Mastery</span>
+                <span>Your Journey to Git Bioscope</span>
               </div>
               
               <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
