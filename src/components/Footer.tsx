@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
             {/* Brand Section */}
             <div className="col-span-2 space-y-4">
               <div className="flex items-center space-x-2">
-                <GitBranch className="w-8 h-8 text-primary animate-pulse-glow" />
+                <img src="favicon.ico" alt="Kubernetes Bioscope Icon" className="w-6 h-6 mr-2" />
                 <span className="text-xl font-bold text-gradient-primary">Git Bioscope</span>
               </div>
               <p className="text-muted-foreground max-w-md">
